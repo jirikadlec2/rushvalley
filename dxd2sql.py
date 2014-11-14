@@ -1,16 +1,23 @@
 __author__ = 'Jiri'
 
 #converts the dxd file to a sql file
-import time
-import pytz
 import dxd
 import converter
+import time
+
+
+def decagon_time(raw_time):
+    return time.gmtime(raw_time + 946684800)
+
+def decagon_time_local(raw_time):
+    return time.localtime(raw_time + 946684800)
+
 
 def sql_insert_values(raw_time, val, site_id, var_id, meth_id, src_id, qc_id):
 
-    utc_time = dxd.decagon_time(raw_time)
+    utc_time = decagon_time(raw_time)
     #TODO read the time zone from a settings file
-    local_time = dxd.decagon_time_local(raw_time)
+    local_time = decagon_time_local(raw_time)
     utc_offset = -7
 
     sql_utc = time.strftime('%Y-%m-%d %H:%M:%S', utc_time)
@@ -22,13 +29,29 @@ VALUES (%s, %s, "%s", "%s", %s, %s, "nc", %s, %s, %s);' \
            % (val, utc_offset, sql_utc, sql_local, site_id, var_id, meth_id, src_id, qc_id)
 
 
-def create_sql(dxd_file, port, sensor, response):
+def create_sql(dxd_file, port, sensor, response, sql_file):
     raw_data = dxd.read_dxd(dxd_file, port)
-    nr = len(raw_data)
+    #get the metadata - need to use lookup table
+    site_id = 1
+    var_id = 1
+    meth_id = 1
+    src_id = 1
+    qc_id = 1
+
+    f = open(sql_file,'w')
+
+    nr = len(raw_data["dates"])
     for row in range(0, nr):
-        print row
+        raw_time = raw_data["dates"][row]
+        raw_val = raw_data["vals"][row]
+        val = converter.convert(raw_val, sensor, response)
+        sql = sql_insert_values(raw_time, val, site_id, var_id, meth_id, src_id, qc_id)
+        f.write(sql)
+        f.write('\n')
+    f.close()
+
 
 if __name__ == '__main__':
-    raw_time = 456418800
-    sql = sql_insert_values(raw_time, 123, 1, 1, 1, 1, 1)
-    print sql
+    dxd_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\5G0E3562new.dxd'
+    sql_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\test.sql'
+    create_sql(dxd_file, 1, 'MPS-6', 1, sql_file)
