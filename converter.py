@@ -54,6 +54,29 @@ def convert(raw_value, sensor, response):
             ec = (10.0 ** float(rec / 215)) / 1000.0
             return ec
 
+    elif sensor == 'SRS-Nr':
+        #SRS-Nr red spectral radiance (630 nm)
+        if response == 1:
+            r630 = port_response(raw_value, start_bit=1, end_bit=11)
+            return (10 ** float(r630 /480)) / 10000.0
+        #SRS-Nr NIR spectral radiance (800 nm)
+        elif response == 2:
+            r800 = port_response(raw_value, start_bit=12, end_bit=22)
+            return (10 ** float(r800 / 480)) / 10000.0
+        #SRS-Nr NDVI
+        elif response == 3:
+            ra = port_response(raw_value, 25, 31)
+            alpha = 100.0 / float(ra)
+            r630 = port_response(raw_value, start_bit=1, end_bit=11)
+            r = (10 ** float(r630 /480)) / 10000.0
+            r800 = port_response(raw_value, start_bit=12, end_bit=22)
+            i = (10 ** float(r800 / 480)) / 10000.0
+            ndvi = (alpha * i - r)/(alpha * i + r)
+
+
+
+
+
 
 
 

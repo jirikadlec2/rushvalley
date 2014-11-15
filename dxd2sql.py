@@ -32,11 +32,11 @@ VALUES (%s, %s, "%s", "%s", %s, %s, "nc", %s, %s, %s);' \
 def create_sql(dxd_file, port, sensor, response, sql_file):
     raw_data = dxd.read_dxd(dxd_file, port)
     #get the metadata - need to use lookup table
-    site_id = 1
-    var_id = 1
-    meth_id = 1
+    site_id = 8
+    var_id = 33
+    meth_id = 68
     src_id = 1
-    qc_id = 1
+    qc_id = 0
 
     f = open(sql_file,'w')
 
@@ -53,5 +53,5 @@ def create_sql(dxd_file, port, sensor, response, sql_file):
 
 if __name__ == '__main__':
     dxd_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\5G0E3562new.dxd'
-    sql_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\test.sql'
-    create_sql(dxd_file, 1, 'MPS-6', 1, sql_file)
+    sql_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\test5.sql'
+    create_sql(dxd_file, 4, 'GS3', 3, sql_file)
