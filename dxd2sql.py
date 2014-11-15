@@ -2,7 +2,7 @@ __author__ = 'Jiri'
 
 #converts the dxd file to a sql file
 import dxd
-import converter
+from converter import Converter
 import time
 
 
@@ -41,10 +41,12 @@ def create_sql(dxd_file, port, sensor, response, sql_file):
     f = open(sql_file,'w')
 
     nr = len(raw_data["dates"])
+    c = Converter.create(sensor)
     for row in range(0, nr):
         raw_time = raw_data["dates"][row]
         raw_val = raw_data["vals"][row]
-        val = converter.convert(raw_val, sensor, response)
+
+        val = c.convert(response, raw_val)
         sql = sql_insert_values(raw_time, val, site_id, var_id, meth_id, src_id, qc_id)
         f.write(sql)
         f.write('\n')

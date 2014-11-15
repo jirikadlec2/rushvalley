@@ -1,102 +1,92 @@
 __author__ = 'Jiri'
-#converts the raw byte to the real sensor values
 
 import bitstring
 
 
-def port_response(raw, start_bit, end_bit):
-    #bits in the DECAGON specs are counted from right to left
-    start = 31 - end_bit
-    end = 32 - start_bit
-    print "start: %s end: %s" % (start, end)
+class Converter(object):
+    #create based on class name
+    def create(sensor):
+        if sensor == "MPS-6": return MPS6()
+        if sensor == "GS3": return GS3()
+        if sensor == "SRS-Nr": return SRSNr()
+        assert 0, "The sensor type is not supported: " + sensor
+    create = staticmethod(create)
 
-    raw_bits = bitstring.BitArray(uint=raw, length=32)
-    subset = bitstring.BitArray(bin=raw_bits[start:end].bin)
-    return subset.uint
+    #convert raw bits from the port to the numeric raw value
+    def port(raw_bits, start_bit, end_bit):
+        #bits in the DECAGON specs are counted from right to left
+        start = 31 - end_bit
+        end = 32 - start_bit
+        raw_bits = bitstring.BitArray(uint=raw_bits, length=32)
+        subset = bitstring.BitArray(bin=raw_bits[start:end].bin)
+        return subset.uint
+    port = staticmethod(port)
 
 
-def convert(raw_value, sensor, response):
-    #MPS-6
-    if sensor == 'MPS-6':
-
+#MPS-6 sensor (water potential, temperature)
+class MPS6(Converter):
+    def convert(self, response, raw_value):
         #MPS-6 water potential
         if response == 1:
-            rw = port_response(raw_value, start_bit=0, end_bit=15)
+            rw = self.port(raw_value, start_bit=0, end_bit=15)
             return (10 ** (0.0001 * rw)) / -10.20408
-
         #MPS-6 temperature
         elif response == 2:
-            rt = port_response(raw_value, start_bit=16, end_bit=25)
+            rt = self.port(raw_value, start_bit=16, end_bit=25)
             if rt <= 900:
                 return float(rt - 400) / 10.0
             else:
                 return ((900 + 5 *(rt - 900)) - 400) / 10
 
-    #GS3 Moisture/Temp/EC
-    elif sensor == 'GS3':
 
-        #GS3 soil moisture WWC
+#GS-3 sensor (WWC, temperature, EC)
+class GS3(Converter):
+    def convert(self, response, raw_value):
+        #volumnometric water content
         if response == 1:
-            re = port_response(raw_value, start_bit=0, end_bit=11)
-            ea = float(re) / 50.0
-            wwc = 5.89e-6 * ea**3 - 7.62e-4 * ea**2 + 3.67e-2 * ea - 7.53e-2
-            return wwc
-        #GS3 temperature
+                re = self.port(raw_value, start_bit=0, end_bit=11)
+                ea = float(re) / 50.0
+                wwc = 5.89e-6 * ea**3 - 7.62e-4 * ea**2 + 3.67e-2 * ea - 7.53e-2
+                return wwc
+        #temperature
         elif response == 2:
-            rt = port_response(raw_value, start_bit=22, end_bit=31)
+            rt = self.port(raw_value, start_bit=22, end_bit=31)
             if rt <= 900:
                 return float(rt - 400) / 10.0
             else:
                 return ((900 + 5 *(rt - 900)) - 400) / 10
-        #GS3 bulk electrical conductivity
+        #bulk electrical conductivity
         elif response == 3:
-            rec = port_response(raw_value, start_bit=12, end_bit=21)
-            ec = (10.0 ** float(rec / 215)) / 1000.0
+            rec = self.port(raw_value, start_bit=12, end_bit=21)
+            ec = float(10.0 ** float(rec / 215.0)) / 1000.0
             return ec
 
-    elif sensor == 'SRS-Nr':
-        #SRS-Nr red spectral radiance (630 nm)
+
+#SRS-Nr NDVI Field Stop (sensor #114)
+class SRSNr(Converter):
+    def convert(self, response, raw_value):
+        #red spectral radiance (630 nm)
         if response == 1:
-            r630 = port_response(raw_value, start_bit=1, end_bit=11)
-            return (10 ** float(r630 /480)) / 10000.0
-        #SRS-Nr NIR spectral radiance (800 nm)
+            r630 = self.port(raw_value, start_bit=1, end_bit=11)
+            return (10 ** float(r630 /480.0)) / 10000.0
+        #NIR spectral radiance (800 nm)
         elif response == 2:
-            r800 = port_response(raw_value, start_bit=12, end_bit=22)
-            return (10 ** float(r800 / 480)) / 10000.0
-        #SRS-Nr NDVI
+            r800 = self.port(raw_value, start_bit=12, end_bit=22)
+            return (10 ** float(r800 / 480.0)) / 10000.0
+        #NDVI
         elif response == 3:
-            ra = port_response(raw_value, 25, 31)
+            ra = self.port(raw_value, start_bit=25, end_bit=31)
+            orientation = self.port(raw_value, start_bit=23, end_bit=24)
             alpha = 100.0 / float(ra)
-            r630 = port_response(raw_value, start_bit=1, end_bit=11)
-            r = (10 ** float(r630 /480)) / 10000.0
-            r800 = port_response(raw_value, start_bit=12, end_bit=22)
-            i = (10 ** float(r800 / 480)) / 10000.0
-            ndvi = (alpha * i - r)/(alpha * i + r)
+            #if the sensor returns alpha=1, use the predefined default alpha
+            default_alpha = 1.86
+            if alpha == 1:
+                alpha = default_alpha
 
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    print port_response(1917014247, 0, 11)
-    print port_response(1917014247, 22, 31)
-    print port_response(1917014247, 12, 21)
-    print port_response(29289144, 0, 15)
-    print port_response(29289144, 16, 25)
-
-    #tests
-    water_potential = convert(43414879, 'MPS-6', 1)
-    print "MPS-6 water potential:%s" % water_potential
-    soil_temperature = convert(43414879, 'MPS-6', 2)
-    print "MPS-6 temperature:%s" % soil_temperature
-    soil_moisture = convert(2764071169, 'GS3', 1)
-    print "GS3 soil moisture:%s" % soil_moisture
-    gs3_temperature = convert(2764071169, 'GS3', 2)
-    print "GS3 temperature:%s" % gs3_temperature
-    gs3_ec = convert(2764071169, 'GS3', 3)
-    print "GS3 electric conductivity:%s" % gs3_ec
+            r630 = self.port(raw_value, start_bit=1, end_bit=11)
+            red = (10 ** float(r630 / 480.0)) / 10000.0
+            r800 = self.port(raw_value, start_bit=12, end_bit=22)
+            nir = (10 ** float(r800 / 480.0)) / 10000.0
+            ndvi = float(alpha * nir - red)/float(alpha * nir + red)
+            return ndvi
 
