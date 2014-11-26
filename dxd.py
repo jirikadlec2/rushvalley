@@ -15,6 +15,8 @@ def read_dxd(dxd_file, port):
             txt = element.text
 
     #now parse txt to two lists dates, vals
+    if txt == "no data found":
+        return None
     result = {"dates": [], "vals": []}
     for line in txt.splitlines():
         if line.strip() == "":

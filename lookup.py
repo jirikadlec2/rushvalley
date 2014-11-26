@@ -4,103 +4,123 @@ import xlrd
 import pymysql
 import dxd2sql
 
-#rather use GetSites() method here, then we don't need password.
-def get_site_id(site_code):
-    res = None
-    conn = pymysql.connect(host='worldwater.byu.edu', port=3306, user='USERNAME', passwd='PASSWORD', db='RushValley')
-    cur = conn.cursor()
-    qry = 'SELECT SiteID FROM sites WHERE SiteCode = "%s"' % site_code
-    cur.execute(qry)
-    r = cur.fetchone()
-    if r:
-        res = int(r[0])
 
-    cur.close()
-    conn.close()
-    return res
+class Updater(object):
 
+    def __init__(self):
+        self.db_host = 'worldwater.byu.edu'
+        self.db_user = 'WWO_Admin'
+        self.db_pass = 'isaiah4118'
+        self.db_db = 'RushValley'
 
-def is_file(filename):
-    try:
-        with open(filename) as file:
-            pass
-        return True
-    except IOError as e:
-        print "Unable to open file %s" % filename
-        return None
+    #rather use GetSites() method here, then we don't need password.
+    def get_site_id(self, site_code):
+        res = None
+        conn = pymysql.connect(host=self.db_host, port=3306, user=self.db_user, passwd=self.db_pass, db=self.db_db)
+        cur = conn.cursor()
+        qry = 'SELECT SiteID FROM sites WHERE SiteCode = "%s"' % site_code
+        cur.execute(qry)
+        r = cur.fetchone()
+        if r:
+            res = int(r[0])
 
+        cur.close()
+        conn.close()
+        return res
 
-#this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
-#this should include the SiteCode, SiteID, VariableID, MethodID
-def read_lookup(xlsfile, out_dir, sensor_name):
-    book = xlrd.open_workbook(xlsfile)
-    sheets = book.sheets()
-    sheet0 = sheets[0]
-    nr = sheet0.nrows
-    nc = sheet0.ncols
-    for i in range(1, nr):
-        logger = sheet0.cell_value(i, 0)
-        site_code = sheet0.cell_value(i, 1)
-        port = int(sheet0.cell_value(i, 4))
-        sensor = sheet0.cell_value(i, 5)
+    #gets the latest dataValue from the database
+    def get_last_db_time(self, site_id, var_id, meth_id):
+        res = None
+        conn = pymysql.connect(host=self.db_host, port=3306, user=self.db_user, passwd=self.db_pass, db=self.db_db)
+        cur = conn.cursor()
+        qry = 'SELECT EndDateTimeUTC FROM seriescatalog WHERE SiteID = %s AND VariableID = %s AND MethodID = %s' \
+              % (site_id, var_id, meth_id)
+        cur.execute(qry)
+        r = cur.fetchone()
+        if r:
+            res = r[0]
+        cur.close()
+        conn.close()
+        return res
 
-        dxd_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\dxd\\%s.dxd' % logger
-        if not is_file(dxd_file):
-            continue
+    def is_file(self, filename):
+        try:
+            with open(filename) as file:
+                pass
+            return True
+        except IOError as e:
+            print "Unable to open file %s" % filename
+            return None
 
-        if sensor == sensor_name:
-            if sensor == 'MPS-6':
-                site_id = get_site_id(site_code)
-                sql_file = out_dir + '\\%s.sql' % sensor
+    def sensor_sql(self, site, var, meth, dxd, port, sensor, resp, sql_file):
+        m = dxd2sql.SQLManager(site=site, var=var, meth=meth)
+        db_time = self.get_last_db_time(site, var, meth)
+        m.create_sql(dxd, port=port, sensor=sensor, response=resp, sql_file=sql_file,
+                           begin_time=db_time, append=True)
 
-                #water potential
-                vari_id = 20
-                meth_id = 62
-                resp = 1
-                m = dxd2sql.SQLManager(site=site_id, var=vari_id, meth=meth_id)
-                m.create_sql(dxd_file, port=port, sensor=sensor, response=resp, sql_file=sql_file, append=True)
+    #this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
+    #this should include the SiteCode, SiteID, VariableID, MethodID
+    def read_lookup(self, xlsfile, out_dir, sensor_name):
+        book = xlrd.open_workbook(xlsfile)
+        sheets = book.sheets()
+        sheet0 = sheets[0]
+        nr = sheet0.nrows
+        nc = sheet0.ncols
+        for i in range(1, nr):
+            logger = sheet0.cell_value(i, 0)
+            site_code = sheet0.cell_value(i, 1)
+            port = int(sheet0.cell_value(i, 4))
+            sensor = sheet0.cell_value(i, 5)
 
-                #temperature
-                vari_id = 22
-                meth_id = 63
-                resp = 2
-                m = dxd2sql.SQLManager(site=site_id, var=vari_id, meth=meth_id)
-                m.create_sql(dxd_file, port=port, sensor=sensor, response=resp, sql_file=sql_file, append=True)
+            dxd_file = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\dxd\\%s.dxd' % logger
+            if not self.is_file(dxd_file):
+                continue
 
-            elif sensor == 'GS3':
-                site_id = get_site_id(site_code)
-                sql_file = out_dir + '\\%s.sql' % sensor
+            sql_file = '%s\\%s.sql' % (out_dir, sensor)
+            site_id = self.get_site_id(site_code)
+            if site_id is None:
+                print 'site not found in db: %s' % site_code
+                continue
 
-                #soil moisture
-                m = dxd2sql.SQLManager(site=site_id, var=27, meth=66)
-                m.create_sql(dxd_file, port=port, sensor=sensor, response=1, sql_file=sql_file, append=True)
+            if sensor == sensor_name:
+                if sensor == 'MPS-6':
+                    #water potential
+                    self.sensor_sql(site=site_id, var=20, meth=62, resp=1, dxd=dxd_file,
+                                    port=port, sensor=sensor, sql_file=sql_file)
 
-                #temperature
-                m = dxd2sql.SQLManager(site=site_id, var=29, meth=67)
-                m.create_sql(dxd_file, port=port, sensor=sensor, response=2, sql_file=sql_file, append=True)
+                    #temperature
+                    self.sensor_sql(site=site_id, var=22, meth=63, resp=2, dxd=dxd_file,
+                                    port=port, sensor=sensor, sql_file=sql_file)
 
-                #conductivity
-                m = dxd2sql.SQLManager(site=site_id, var=33, meth=68)
-                m.create_sql(dxd_file, port=port, sensor=sensor, response=3, sql_file=sql_file, append=True)
+                elif sensor == 'GS3':
+                    #soil moisture
+                    self.sensor_sql(site=site_id, var=27, meth=66, resp=1, dxd=dxd_file,
+                                    port=port, sensor=sensor, sql_file=sql_file)
 
-            elif sensor == 'SRS':
-                site_id = get_site_id(site_code)
+                    #temperature
+                    self.sensor_sql(site=site_id, var=29, meth=67, resp=2, dxd=dxd_file,
+                                    port=port, sensor=sensor, sql_file=sql_file)
 
-                if site_id is None:
-                    print 'site not found in db: %s' % site_code
-                    continue
+                    #conductivity
+                    self.sensor_sql(site=site_id, var=33, meth=68, resp=3, dxd=dxd_file,
+                                    port=port, sensor=sensor, sql_file=sql_file)
 
-                sql_file = out_dir + '\\%s.sql' % sensor
+                elif sensor == 'SRS':
+                    #Red
+                    self.sensor_sql(site=site_id, var=23, meth=64, resp=1, dxd=dxd_file,
+                                    port=port, sensor='SRS-Nr', sql_file=sql_file)
 
-                #Red
-                m = dxd2sql.SQLManager(site=site_id, var=23, meth=64)
-                m.create_sql(dxd_file, port=port, sensor='SRS-Nr', response=1, sql_file=sql_file, append=True)
-                #Nir
-                m = dxd2sql.SQLManager(site=site_id, var=25, meth=65)
-                m.create_sql(dxd_file, port=port, sensor='SRS-Nr', response=2, sql_file=sql_file, append=True)
-                #NDVI
-                m = dxd2sql.SQLManager(site=site_id, var=43, meth=72)
-                m.create_sql(dxd_file, port=port, sensor='SRS-Nr', response=3, sql_file=sql_file, append=True)
+                    #Nir
+                    self.sensor_sql(site=site_id, var=25, meth=65, resp=2, dxd=dxd_file,
+                                    port=port, sensor='SRS-Nr', sql_file=sql_file)
+
+                    #NDVI
+                    self.sensor_sql(site=site_id, var=43, meth=72, resp=3, dxd=dxd_file,
+                                    port=port, sensor='SRS-Nr', sql_file=sql_file)
+
+                elif sensor == 'PYR':
+                    self.sensor_sql(site=site_id, var=44, meth=73, resp=1, dxd=dxd_file,
+                                    port=port, sensor='PYR', sql_file=sql_file)
 
 
 
@@ -108,4 +128,11 @@ def read_lookup(xlsfile, out_dir, sensor_name):
 
 if __name__ == '__main__':
     xlsfile = "C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\01-LookupTable.xlsx"
-    read_lookup(xlsfile, 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\sql', 'SRS')
+    u = Updater()
+    #t = u.get_last_db_time(8, 22, 63)
+    #print type(t)
+    out_dir = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\sql'
+    #u.read_lookup(xlsfile, out_dir, 'MPS-6')
+    #u.read_lookup(xlsfile, out_dir, 'GS3')
+    u.read_lookup(xlsfile, out_dir, 'SRS')
+    #u.read_lookup(xlsfile, out_dir, 'PYR')
