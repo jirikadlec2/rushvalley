@@ -1,6 +1,8 @@
 __author__ = 'Jiri'
 
 from lxml import etree
+from os import listdir
+from os.path import isfile, join
 
 #reads the dxd file and checks the response of the file
 #returns a dictionary with raw dates and raw values

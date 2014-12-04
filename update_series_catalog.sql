@@ -1,6 +1,7 @@
 
 -- Clear out the entire SeriesCatalog Table
-DELETE FROM  seriescatalog;
+use RushValley;
+DELETE FROM  seriescatalog WHERE ValueCount = 0 or ValueCount is NULL;
 
 -- Re-create the records in the SeriesCatalog Table
 INSERT INTO seriescatalog (SiteID, SiteCode, SiteName, SiteType, VariableID, VariableCode, VariableName, Speciation,
