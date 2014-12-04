@@ -59,7 +59,8 @@ getSites <- function(url) {
     df$Comments[i] <- comments
     df$State[i] <- state
     df$County[i] <- county
- } 
+ }
+ return(df)
 }
 
 
@@ -73,6 +74,7 @@ getValues <- function(site, variable, startDate, endDate) {
   url = paste(base_url, "?location=", network, ":", site, 
               "&variable=", network, ":", variable, sep="",
               "&startDate=",startDate, "&endDate=",endDate)
+  print(url)
   
     text = getURL(url)
     doc = xmlRoot(xmlTreeParse(text, getDTD=FALSE, useInternalNodes = TRUE))
@@ -111,22 +113,45 @@ getValues <- function(site, variable, startDate, endDate) {
 }
 
 
-##############################################
-# Change these values to get a different plot#
-##############################################
+###############################################
+# Change these values to get a different plot #
+###############################################
 
-no_mammal = c("Ru1BMP5", "Ru2BNMA", 
-"Ru4BNCA", "Ru4BNMA", "Ru5BNM5", "Ru5BNN5", "RU4BNCA", "Ru4BNNU", "Ru4BNPA", "Ru4BNMA",
-"Ru5BNPA", "Ru5BNNA", "Ru5BNPA", "Ru1BNCA", "Ru1BNNU", "Bu2BNPA", "Ru2BNCA")
+###############################################
+# Example: Get sites for mammal and no mammal #
+###############################################
 
-mammal = c("Ru1BMPA", "Ru1BMNA", "Ru5BMCA", "Ru1BMNU", "Ru5BMMA", "Ru2BMPA", "Ru2BMN5", "Ru3BMMA",
-           "Ru3BMPA", "Ru4BMPA", "Ru4BMNA", "Ru2BMMA", "Ru2BMNU", "Ru3BMNA", "Ru3BMNU", "Ru4BMMA",
-           "Ru5BMPA", "Ru1BMMA")
+all_sites <- getSites("http://worldwater.byu.edu/interactive/rushvalley/services/index.php/cuahsi_1_1.asmx")
+
+#add column for mammal treatment: 5th letter in the code
+all_sites$Mammals <- substring(all_sites$SiteCode, 5, 5)
+
+#sites with 'no mammal' treatment
+sites_no_mammal <- all_sites[all_sites$Mammals=="N",]
+#sites with 'mammal' treatment
+sites_mammal <- all_sites[all_sites$Mammals=="M",]
+
+###############################################
+# Example: Get daily max NDVI's by treatment  #
+###############################################
 
 #get data for mammal
 startDate = "2014-08-01"
 endDate = "2014-10-15"
 variable = "SRS_Nr_NDVI"
+
+#empty data frame
+no_mammal <- NULL
+#plot daily max NDVI's for 'no mammal'
+plot.new()
+for (i in 1: length(sites_no_mammal)-2) {
+  sitecode <- sites_no_mammal$SiteCode
+  data <- getValues(sitecode, variable, startDate, endDate)
+  validdata <- na.omit(data)
+  dailyMean <- aggregate(validdata$DataValue, list(validdata$Date), mean)
+  plot(dailyMean, type="l", add=TRUE)
+}
+
 site = no_mammal[1]
 data1 = getValues(site, variable, startDate, endDate)
 #get the daily average
