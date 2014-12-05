@@ -2,8 +2,9 @@
 #this example compares temperature in last month at 5cm and 30cm depth
 
 #to run this script, you must install the XML package
-library(XML)
-library(RCurl)
+require(XML)
+require(RCurl)
+require(xts)
 
 #this function gets the Sites from Hydroserver.
 #it converts the sites to a data.frame object
@@ -83,28 +84,35 @@ getValues <- function(site, variable, startDate, endDate) {
     noData <- as.numeric(variable$noDataValue)
   
   
-    vals <- doc[[2]]
+    vals <- doc[[2]][[3]]
     
     if (is.null(vals)){
       print(paste("no data values found:", url))
       return(NULL)
     }
+    if (xmlValue(vals) == "") {
+      print(paste("no data values found:", url))
+      return(NULL)
+    }
   
     valCount = xmlSize(vals)
+    print(paste("valCount:", valCount))
     xmNames = xmlSApply(vals, xmlName)
     val = c()
     dt = c()
     for (j in 1:valCount){
       if(xmlName(vals[[j]]) == 'value') {
-        dt[j] <- xmlAttrs(vals[[j]])["dateTime"]
-        val[j] <- as.numeric(xmlValue(vals[[j]]))
+        dt <- c(dt, xmlAttrs(vals[[j]])["dateTime"])
+        val <- c(val, as.numeric(xmlValue(vals[[j]])))
       }
     }
   
-    if (is.null(val) | is.null(dt)){
+    print(length(val))
+    if (length(val) == 0) {
       return (NULL)
     }
-  
+    
+   
     df <- data.frame("time"=as.POSIXct(dt), "DataValue"=val)
     df[df$DataValue == noData,2] <- NA
     df$Date <- as.Date(as.POSIXct(df$time))
@@ -112,10 +120,6 @@ getValues <- function(site, variable, startDate, endDate) {
   return(df)
 }
 
-
-###############################################
-# Change these values to get a different plot #
-###############################################
 
 ###############################################
 # Example: Get sites for mammal and no mammal #
@@ -144,12 +148,33 @@ variable = "SRS_Nr_NDVI"
 no_mammal <- NULL
 #plot daily max NDVI's for 'no mammal'
 plot.new()
-for (i in 1: length(sites_no_mammal)-2) {
-  sitecode <- sites_no_mammal$SiteCode
+numSites <- nrow(sites_no_mammal)
+col.index <- 0
+for (i in 1: numSites) {
+  sitecode <- sites_no_mammal$SiteCode[i]
   data <- getValues(sitecode, variable, startDate, endDate)
-  validdata <- na.omit(data)
-  dailyMean <- aggregate(validdata$DataValue, list(validdata$Date), mean)
-  plot(dailyMean, type="l", add=TRUE)
+  if (is.null(data)) {
+    print ('no data!')
+    next
+  }
+  ts <- xts(data[,2], order.by=data[,1])
+  ts.valid <- na.omit(ts)
+  if (nrow(ts.valid) == 0) next
+  ts.daily <- to.daily(ts.valid)
+  ts.daily$ts.valid.Open <- NULL
+  ts.daily$ts.valid.Low <- NULL
+  ts.daily$ts.valid.Close <- NULL
+  names(ts.daily)[1] <- sitecode
+  
+  col.index = col.index + 1
+  if (col.index == 1) {
+    ts.max <- ts.daily
+  } else {
+    ts.max <- cbind(ts.max, ts.daily)
+  }
+  
+  #plot(ts.max)
+  
 }
 
 site = no_mammal[1]
