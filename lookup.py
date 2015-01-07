@@ -132,7 +132,7 @@ if __name__ == '__main__':
     #t = u.get_last_db_time(8, 22, 63)
     #print type(t)
     out_dir = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\sql'
-    u.read_l ookup(xlsfile, out_dir, 'MPS-6')
+    u.read_lookup(xlsfile, out_dir, 'MPS-6')
     u.read_lookup(xlsfile, out_dir, 'GS3')
     u.read_lookup(xlsfile, out_dir, 'SRS')
     u.read_lookup(xlsfile, out_dir, 'PYR')

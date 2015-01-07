@@ -21,6 +21,7 @@ def get_dxd_passwords(password_file):
 
 
 def read_mrid(dxd_file):
+    print 'reading dxd_file: %s' % dxd_file
     doc = etree.parse(dxd_file)
     root = doc.getroot()
     for element in root.iter():

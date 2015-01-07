@@ -1,0 +1,9 @@
+Package: cats
+Title: This is my first package!
+Version: 0.1
+Authors@R: "Jiri Kadlec <jirikadlec2@gmail.com> [aut, cre]"
+Description: This is my first package!
+Depends:
+    R (>= 3.1.2)
+License: BSD
+LazyData: true
