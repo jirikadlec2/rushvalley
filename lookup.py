@@ -3,6 +3,7 @@ __author__ = 'Jiri'
 import xlrd
 import pymysql
 import dxd2sql
+import dxd
 
 
 class Updater(object):
@@ -52,11 +53,19 @@ class Updater(object):
             print "Unable to open file %s" % filename
             return None
 
+
+    #this reads the DXD file, reads the last time in the database, and generates the sql_file.
+    #to be replaced by calling the services API.
     def sensor_sql(self, site, var, meth, dxd, port, sensor, resp, sql_file):
         m = dxd2sql.SQLManager(site=site, var=var, meth=meth)
         db_time = self.get_last_db_time(site, var, meth)
         m.create_sql(dxd, port=port, sensor=sensor, response=resp, sql_file=sql_file,
                            begin_time=db_time, append=True)
+
+
+    #now upload the data related to the sensor
+    def sensor_upload(self, site, var, meth, dxd_file, port, sensor, resp):
+        data_values = dxd.read_dxd(dxd_file, port)
 
     #this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
     #this should include the SiteCode, SiteID, VariableID, MethodID
