@@ -15,7 +15,7 @@ library(waterml)
 # Example: Get daily max NDVI's by mammal treatment in the long format  #
 # change startDate, endDate, variable to show different plot !!         #
 #########################################################################
-server <- "http://worldwater.byu.edu/interactive/rushvalley/services/index.php/cuahsi_1_1.asmx"
+server <- "http://worldwater.byu.edu/app/index.php/rushvalley/services/cuahsi_1_1.asmx"
 startDate = "2014-10-07"
 endDate = "2014-10-15"
 variable = "SRS_Nr_NDVI"
@@ -33,7 +33,7 @@ col.index <- 0
 for (i in 1: nrow(all_sites)) {
   sitecode <- all_sites$SiteCode[i]
   new_data <- GetValues(server, sitecode, variable, startDate, endDate, daily="max")
-  
+
   #skip sites that don't have NDVI data in this time period
   if (is.null(new_data)) {
     print ('no data!')
@@ -43,7 +43,7 @@ for (i in 1: nrow(all_sites)) {
   #we add the site and treatment column to identify the site and the treatment
   new_data$site <- sitecode
   #to indentify mammal/no mammal treatment we use the 5th character or the SiteCode
-  new_data$treatment <- substring(sitecode, 5, 5) 
+  new_data$treatment <- substring(sitecode, 5, 5)
   #we add the site's data to the data frame
   data <- rbind(data, new_data)
 }
@@ -58,7 +58,7 @@ data.summarized <- ddply(data, ~time+treatment, summarise, mean=mean(DataValue),
 #rename the variable to better name
 names(data.summarized)[3] <- "daily.max.NDVI"
 # Daily plot: no error bars
-ggplot(data.summarized, aes(x=time, y=daily.max.NDVI, colour=treatment)) + 
+ggplot(data.summarized, aes(x=time, y=daily.max.NDVI, colour=treatment)) +
   geom_line() +
   geom_point()
 
@@ -66,7 +66,7 @@ ggplot(data.summarized, aes(x=time, y=daily.max.NDVI, colour=treatment)) +
 # The errorbars overlapped, so we use position_dodge to move them horizontally
 pd <- position_dodge(0.25) # move them .05 to the left and right
 
-ggplot(data.summarized, aes(x=time, y=daily.max.NDVI, ymax=max(daily.max.NDVI), colour=treatment)) + 
+ggplot(data.summarized, aes(x=time, y=daily.max.NDVI, ymax=max(daily.max.NDVI), colour=treatment)) +
   geom_errorbar(aes(ymin=daily.max.NDVI-sd, ymax=daily.max.NDVI+sd), width=.5, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd)
