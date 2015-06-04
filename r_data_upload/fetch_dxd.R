@@ -32,5 +32,6 @@ download_all_decagon <- function(password_file) {
   }
 }
 
-password_file = "C:/jiri/dropbox/BYU/hydroinformatics/paper/sample_code/passwords.csv"
+setwd("C:/jiri/dropbox/BYU/hydroinformatics/paper/sample_code")
+password_file = "passwords.csv"
 download_all_decagon(password_file)
