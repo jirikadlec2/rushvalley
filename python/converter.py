@@ -3,17 +3,30 @@ __author__ = 'Jiri'
 import bitstring
 import math
 
+
+####################################################################
+# Base Class for Converting Decagon Data from raw data to SI Units #
+# Expand this class for other sensors or data loggers              #
+####################################################################
 class Converter(object):
-    #create based on class name
+    #create a new converter based on class name
     def create(sensor):
-        if sensor == "MPS-6": return MPS6()
-        if sensor == "GS3": return GS3()
-        if sensor == "SRS-Nr" or sensor == "SRS": return SRSNr()
-        if sensor == "SRS-Ni": return SRSNi()
-        if sensor == "PYR": return PYR()
-        if sensor == "ECRN50Precip" or sensor == "ECRN50": return ECRN50Precip()
-        if sensor == "VP3": return VP3()
-        if sensor == "Anemo": return Anemo()
+        if sensor == "MPS-6":
+            return MPS6()
+        if sensor == "GS3":
+            return GS3()
+        if sensor == "SRS-Nr" or sensor == "SRS":
+            return SRSNr()
+        if sensor == "SRS-Ni":
+            return SRSNi()
+        if sensor == "PYR":
+            return PYR()
+        if sensor == "ECRN50Precip" or sensor == "ECRN50":
+            return ECRN50Precip()
+        if sensor == "VP3":
+            return VP3()
+        if sensor == "Anemo":
+            return Anemo()
         assert 0, "The sensor type is not supported: " + sensor
     create = staticmethod(create)
 
@@ -27,8 +40,9 @@ class Converter(object):
         return subset.uint
     port = staticmethod(port)
 
-
-#MPS-6 sensor (water potential, temperature)
+#################################################################
+# MPS-6 sensor (water potential, temperature)                   #
+#################################################################
 class MPS6(Converter):
     def convert(self, response, raw_value):
         #MPS-6 water potential
@@ -50,8 +64,9 @@ class MPS6(Converter):
             else:
                 return ((900 + 5 *(rt - 900)) - 400) / 10
 
-
-#GS-3 sensor (WWC, temperature, EC)
+##################################################################
+# GS-3 sensor (WWC, temperature, EC)                             #
+##################################################################
 class GS3(Converter):
     def convert(self, response, raw_value):
         #volumnometric water content
@@ -73,8 +88,9 @@ class GS3(Converter):
             ec = float(10.0 ** float(rec / 215.0)) / 1000.0
             return ec
 
-
-#SRS-Nr NDVI Field Stop (sensor #114)
+####################################################################
+# SRS-Nr NDVI Field Stop (sensor #114)                             #
+####################################################################
 class SRSNr(Converter):
     def get_red(self, raw_value):
         r630 = self.port(raw_value, start_bit=1, end_bit=11)
@@ -121,8 +137,9 @@ class SRSNr(Converter):
             else:
                 return nodata
 
-
-#SRS-Ni (sensor #115)
+####################################################################
+# SRS-Ni (sensor #115)                                             #
+####################################################################
 class SRSNi(Converter):
 
     #orientation: 0 up-facing, 1 down-facing,
@@ -185,18 +202,23 @@ class SRSNi(Converter):
                 return nodata
 
 
-
-#ECRN-50 Precipitation
+######################################################################
+# ECRN-50 Precipitation                                              #
+######################################################################
 class ECRN50Precip(Converter):
     def convert(self, response, raw_value):
         return raw_value
 
-#PYR Solar Radiation
+######################################################################
+# PYR Solar Radiation                                                #
+######################################################################
 class PYR(Converter):
     def convert(self, response, raw_value):
         return raw_value * (1500.0/4096.0) * 5.0
 
-#VP-3 Humidity/Air Temperature
+######################################################################
+# VP-3 Humidity/Air Temperature                                      #
+######################################################################
 class VP3(Converter):
 
     def get_temperature(self, raw_value):
@@ -221,8 +243,9 @@ class VP3(Converter):
         elif response == 2:
             return self.get_temperature(raw_value)
 
-
-#Sonic Anemo Wind - NEED CHECK!!!
+########################################################################
+# Sonic Anemo Wind - NEED CHECK!!!                                     #
+########################################################################
 class Anemo(Converter):
     def convert(self, response, raw_value):
 

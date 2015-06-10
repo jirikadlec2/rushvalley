@@ -13,12 +13,13 @@ class Updater(object):
     def __init__(self):
         self.hydroserver_user = 'HIS_admin'
         self.hydroserver_password = 'password'
-        self.dxd_folder = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\dxd\\'
+        self.dxd_folder = 'dxd'
+        self.HYDROSERVER_URL = 'http://worldwater.byu.edu/app/index.php/rushvalley/services/api/values/'
 
-
+    # checks is the file is a file or not
     def is_file(self, filename):
         try:
-            with open(filename) as file:
+            with open(filename):
                 pass
             return True
         except IOError as e:
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     u = Updater()
     u.dxd_folder = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\dxd\\'
     out_dir = 'C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\sql'
-    u.read_lookup(xlsfile, out_dir, 'MPS-6')
+
     u.read_lookup(xlsfile, out_dir, 'GS3')
     u.read_lookup(xlsfile, out_dir, 'SRS')
     u.read_lookup(xlsfile, out_dir, 'PYR')

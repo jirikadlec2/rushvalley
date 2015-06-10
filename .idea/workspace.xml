@@ -2,7 +2,53 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d180b1f-034a-48ce-ab43-7435aa75ac0f" name="Default" comment="added sample R scripts and the data upload script">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/r_data_upload/fetch_dxd.R" afterPath="$PROJECT_DIR$/r_data_upload/fetch_dxd.R" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/python/data_transfer.py" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\.RData" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\.Rhistory" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\ImportWaterML.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\add_multiple_values.py" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\add_one_value.py" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\boxplot.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\converter.py" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\data-z-hdsk.r" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\datavalues.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\dxd.py" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\getsites.py" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\mammals.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\ndvi.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\ndvi_example.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\01-Lookuptable-modified.xlsx" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\01-lookup-table-for-R.csv" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\02-example-lookup-table-for-R.csv" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3559.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3562-processed.xls" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3562.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3563.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3564.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3565.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3566-processed.xls" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3566.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3566.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3574.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3575.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3577.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3578.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3580.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3582.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3583.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3586.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3704.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3728.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3729.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\5G0E3730.dxd" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\data_example.csv" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\data_example_for_article.xlsx" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\example_lookup_table.xlsx" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\fetch_dxd.R" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\passwords.csv" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\github\rushvalley\r_data_upload\upload_decagon_xls.R" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run_upload.py" afterPath="$PROJECT_DIR$/run_upload.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="rushvalley.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,14 +71,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="fetch_dxd.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fetch_dxd.py">
+      <file leaf-file-name="data_transfer.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/python/data_transfer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3837472" vertical-offset="459" max-vertical-offset="1156">
-              <caret line="37" column="49" selection-start-line="35" selection-start-column="4" selection-end-line="37" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2958" max-vertical-offset="3485">
+              <caret line="187" column="25" selection-start-line="187" selection-start-column="25" selection-end-line="187" selection-end-column="25" />
               <folding>
-                <element signature="e#21#32#0" expanded="true" />
+                <element signature="e#75#86#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dxd.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python/dxd.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.4582393" vertical-offset="0" max-vertical-offset="1343">
+              <caret line="42" column="27" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="27" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -55,12 +111,10 @@
         <option value="$PROJECT_DIR$/tests/converter_test.py" />
         <option value="$PROJECT_DIR$/test_GS3.py" />
         <option value="$PROJECT_DIR$/getsites.py" />
-        <option value="$PROJECT_DIR$/converter.py" />
         <option value="$PROJECT_DIR$/test_converter.py" />
         <option value="$PROJECT_DIR$/dxd2sql.py" />
         <option value="$PROJECT_DIR$/../USGS-NIDIS/src/SNOTEL/SNOTELHarvesterBYU/jiri_nhd.py" />
         <option value="$PROJECT_DIR$/../hydroinformatics/jiri_nhd.py" />
-        <option value="$PROJECT_DIR$/dxd.py" />
         <option value="$PROJECT_DIR$/fetch_dxd.py" />
         <option value="$PROJECT_DIR$/decagon/uploader.py" />
         <option value="$PROJECT_DIR$/uploader.py" />
@@ -81,12 +135,16 @@
         <option value="$PROJECT_DIR$/../hydroserverlite/assets/api/add_values.py" />
         <option value="$PROJECT_DIR$/../USGS-NIDIS/src/SNOTEL/SNOTELHarvesterBYU/snotel_harvester.py" />
         <option value="$PROJECT_DIR$/../USGS-NIDIS/src/SNOTEL/SNOTELHarvesterBYU/run_snotel.py" />
+        <option value="$PROJECT_DIR$/converter.py" />
+        <option value="$PROJECT_DIR$/dxd.py" />
+        <option value="$PROJECT_DIR$/python/run_upload.py" />
+        <option value="$PROJECT_DIR$/python/data_transfer.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="143" />
-    <option name="y" value="95" />
+    <option name="x" value="148" />
+    <option name="y" value="12" />
     <option name="width" value="1400" />
     <option name="height" value="804" />
   </component>
@@ -135,7 +193,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -164,12 +221,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="python" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rushvalley" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rushvalley" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="decagon" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -179,7 +251,7 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/add_multiple_values.py" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -188,53 +260,17 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\dev\github\rushvalley\python" />
       <recent name="C:\dev\github\USGS-NIDIS\src\SNOTEL\SNOTELHarvesterBYU" />
       <recent name="C:\dev\github\hydroserverlite\assets\api" />
       <recent name="C:\dev\github\rushvalley" />
       <recent name="C:\dev\github\LeastCostPath\scripts" />
-      <recent name="C:\gis\leastcost\scripts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\dev\github\rushvalley" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.fetch_dxd">
-    <configuration default="false" name="add_site" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../hydroserverlite/assets/api" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="rushvalley" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../hydroserverlite/assets/api/add_site.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="add_method" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../hydroserverlite/assets/api" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="rushvalley" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../hydroserverlite/assets/api/add_method.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.data_transfer">
     <configuration default="false" name="snotel_harvester" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -284,6 +320,42 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="rushvalley" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fetch_dxd.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="dxd" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="rushvalley" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dxd.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="data_transfer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="rushvalley" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python/data_transfer.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -453,19 +525,19 @@
     <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Python.run_upload" />
       <item index="1" class="java.lang.String" itemvalue="Python.sensor_csv" />
-      <item index="2" class="java.lang.String" itemvalue="Python.add_site" />
-      <item index="3" class="java.lang.String" itemvalue="Python.add_method" />
-      <item index="4" class="java.lang.String" itemvalue="Python.snotel_harvester" />
-      <item index="5" class="java.lang.String" itemvalue="Python.run_snotel" />
-      <item index="6" class="java.lang.String" itemvalue="Python.fetch_dxd" />
+      <item index="2" class="java.lang.String" itemvalue="Python.snotel_harvester" />
+      <item index="3" class="java.lang.String" itemvalue="Python.run_snotel" />
+      <item index="4" class="java.lang.String" itemvalue="Python.fetch_dxd" />
+      <item index="5" class="java.lang.String" itemvalue="Python.dxd" />
+      <item index="6" class="java.lang.String" itemvalue="Python.data_transfer" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.fetch_dxd" />
-        <item index="1" class="java.lang.String" itemvalue="Python.run_snotel" />
-        <item index="2" class="java.lang.String" itemvalue="Python.snotel_harvester" />
-        <item index="3" class="java.lang.String" itemvalue="Python.add_method" />
-        <item index="4" class="java.lang.String" itemvalue="Python.add_site" />
+        <item index="0" class="java.lang.String" itemvalue="Python.data_transfer" />
+        <item index="1" class="java.lang.String" itemvalue="Python.dxd" />
+        <item index="2" class="java.lang.String" itemvalue="Python.fetch_dxd" />
+        <item index="3" class="java.lang.String" itemvalue="Python.run_snotel" />
+        <item index="4" class="java.lang.String" itemvalue="Python.snotel_harvester" />
       </list>
     </recent_temporary>
   </component>
@@ -515,8 +587,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="143" y="95" width="1400" height="804" extended-state="0" />
-    <editor active="false" />
+    <frame x="148" y="12" width="1400" height="804" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902297" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -526,16 +598,16 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43633762" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35479257" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32327586" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32327586" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -553,9 +625,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32291666" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -604,31 +676,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getsites.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="782">
-          <caret line="6" column="19" selection-start-line="5" selection-start-column="0" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dxd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="629">
-          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/excel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="833" max-vertical-offset="1003">
           <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/converter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="2074">
-          <caret line="40" column="26" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -646,24 +697,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dxd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
-          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/excel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="833" max-vertical-offset="1003">
           <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/converter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1445">
-          <caret line="19" column="23" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -744,20 +781,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/excel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="274" max-vertical-offset="952">
-          <caret line="32" column="42" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/getsites.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
-          <caret line="27" column="23" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_converter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="597" max-vertical-offset="1173">
@@ -815,45 +838,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/converter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="714" max-vertical-offset="4284">
-          <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dxd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="160" max-vertical-offset="697">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../FetchSnow/fetch_modis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="927" max-vertical-offset="1598">
           <caret line="81" column="14" selection-start-line="81" selection-start-column="14" selection-end-line="81" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data-z-hdsk.r">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/run_upload.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="2329">
-          <caret line="63" column="23" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/add_one_value.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8439716" vertical-offset="0" max-vertical-offset="697">
-          <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -913,26 +901,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/add_values.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="901">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../hydroserverlite/assets/api/add_values.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="952">
           <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/add_multiple_values.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5673653" vertical-offset="284" max-vertical-offset="952">
-          <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -940,7 +912,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6691617" vertical-offset="5894" max-vertical-offset="6562">
           <caret line="373" column="0" selection-start-line="373" selection-start-column="0" selection-end-line="373" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -948,17 +919,42 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2035928" vertical-offset="0" max-vertical-offset="668">
           <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fetch_dxd.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3837472" vertical-offset="459" max-vertical-offset="1156">
-          <caret line="37" column="49" selection-start-line="35" selection-start-column="4" selection-end-line="37" selection-end-column="49" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1156">
+          <caret line="43" column="24" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="24" />
           <folding>
-            <element signature="e#21#32#0" expanded="true" />
+            <element signature="e#21#32#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/excel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.74040633" vertical-offset="284" max-vertical-offset="952">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/data_transfer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2958" max-vertical-offset="3485">
+          <caret line="187" column="25" selection-start-line="187" selection-start-column="25" selection-end-line="187" selection-end-column="25" />
+          <folding>
+            <element signature="e#75#86#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/dxd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4582393" vertical-offset="0" max-vertical-offset="1343">
+          <caret line="42" column="27" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
