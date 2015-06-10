@@ -6,7 +6,7 @@ import time
 import json
 import urllib2
 import requests
-import dxd
+import decagon
 from converter import Converter
 
 
@@ -101,7 +101,9 @@ class Updater(object):
     # ID's that already exist in the database.                            #
     #######################################################################
     def sensor_upload(self, site_id, variable_id, method_id, source_id, dxd_file, port, sensor, resp):
-        raw_data = dxd.read_dxd(dxd_file, port)
+
+        #reading the raw data from the dxd file
+        raw_data = decagon.read_dxd(dxd_file, port)
         new_data = {
             "user": self.HYDROSERVER_USER,
             "password": self.HYDROSERVER_PASSWORD,
@@ -191,10 +193,13 @@ class Updater(object):
 
 if __name__ == '__main__':
 
+    #STEP 1: Get the data from DECAGON data loggers
+    decagon.download_all('passwords.csv','dxd')
+
+    #STEP 2: Upload the data to HydroServer
     u = Updater()
     u.dxd_folder = 'dxd/'
-
+    u.upload_data('SRS')
+    u.upload_data('PYR')
+    u.upload_data('MPS-6')
     u.upload_data('GS3')
-    #u.upload_data(out_dir, 'GS3')
-    #u.upload_data(out_dir, 'SRS')
-    #u.upload_data(out_dir, 'PYR')

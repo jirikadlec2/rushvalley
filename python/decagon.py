@@ -1,10 +1,21 @@
 __author__ = 'Jiri'
 
 from lxml import etree
-from os import listdir
-from os.path import isfile, join
 import requests
 import csv
+
+
+########################################
+# checks is the file is a file or not  #
+########################################
+def is_file(filename):
+    try:
+        with open(filename):
+            pass
+        return True
+    except IOError as e:
+        print "Unable to open file %s" % filename
+        return None
 
 
 ##########################################################
@@ -34,13 +45,34 @@ def download_dxd(device_id, device_password, mr_id, output_folder):
     user_password = 'M-wuJf5!fu5554v'
     url = 'http://api.ech2odata.com/dfmp/dxd.cgi'
     report = 1
+    file_name = output_folder + '/' + device_id + '.dxd'
+
+    #set the mr_id from the file
+    if is_file(file_name):
+        mr_id = read_mrid(file_name)
+        print('file_name: ' + file_name + ' mrid: ' + str(mr_id))
+
     payload = {'email': email, 'userpass': user_password, 'report': report, 'deviceid': device_id,
                'devicepass': device_password, 'mrid': mr_id}
     r = requests.post(url, data=payload)
-    file_name = output_folder + '/' + device_id + '.dxd'
+
     with open(file_name, 'wb') as fd:
         for chunk in r.iter_content():
             fd.write(chunk)
+
+##########################################################
+# reads the MRID from the dxd file                       #
+# the MRID indicates the last download of the data       #
+##########################################################
+def read_mrid(dxd_file):
+    txt = "no data found"
+    doc = etree.parse(dxd_file)
+    root = doc.getroot()
+    for element in root.iter():
+        if 'Data' in element.tag:
+            mrid = int(element.get('rid'))
+            return mrid
+    return 0
 
 ##########################################################
 # reads the dxd file and checks the response of the file #
@@ -72,7 +104,6 @@ def read_dxd(dxd_file, port):
 
 
 if __name__ == '__main__':
+    #mrid = read_mrid('dxd/5G0E3562.dxd')
+    #print mrid
     download_all('passwords.csv','dxd')
-    #download_dxd('5G0E3562', 'cicu-lywoy', 0)
-    #txt = read_dxd('C:\\jiri\\Dropbox\\BYU\\hydroinformatics\\project\\decagon_files\\5G0E3562new.dxd', 1)
-    #print txt["dates"]
