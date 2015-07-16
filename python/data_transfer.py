@@ -97,19 +97,38 @@ class Updater(object):
 						   "method": method_id,
 						   "response": response})
 		return lookup
+	
+	#########################################################################
+	# This function reads the values to upload from a local user-provided	#
+	# xls file and returns them.												#
+	#########################################################################
+	def read_local_values(self, port):
+		book = xlrd.open_workbook(self.manual_upload_file)
+		sheets = book.sheets()
+		sheet0 = sheets[0]
+		nr = sheet0.nrows
+		for i in range(1, nr):
+			logger = sheet0.cell_value(i, 0)
 
-	#######################################################################
-	# upload the data related to the sensor							   #
-	# this function uses the HydroServer JSON API for uploading the data  #
-	# it reads the data from the dxd file, converts the values, and calls #
-	# the values function of the API using HTTP POST request.			 #
-	# The site_id, variable_id, method_id , and source_id must be valid   #
-	# ID's that already exist in the database.							#
+		
+
+	#########################################################################
+	# Upload the data related to the sensor.						   		#
+	# This function uses the HydroServer JSON API for uploading the data.	#
+	# If being used for manual upload, it reads the data from a local		#
+	# user-provided xls file. Otherwise, it reads the data from the dxd		#
+	# file, converts the values, and calls the values function of the API	#
+	# using HTTP POST request.									 			#
+	# The site_id, variable_id, method_id , and source_id must be valid   	#
+	# ID's that already exist in the database.								#
 	#######################################################################
 	def sensor_upload(self, site_id, variable_id, method_id, source_id, dxd_file, port, sensor, resp):
 
 		#reading the raw data from the dxd file
-		raw_data = decagon.read_dxd(dxd_file, port)
+		if (self.manual_upload_file != None):
+			raw_data = decagon.read_dxd(dxd_file, port)
+		else:
+			raw_data = decagon.read_xls(u.manual_upload_file, port)
 		new_data = {
 			"user": self.HYDROSERVER_USER,
 			"password": self.HYDROSERVER_PASSWORD,
@@ -191,27 +210,33 @@ class Updater(object):
 			if site_id is None:
 				print 'SiteID not found on server for SiteCode: ' + site_code
 				continue
+			
+			#if automatically uploading, use dxd files
+			if (self.manual_upload_file == None):
+				#find the right DXD file for the logger of this sensor
+				dxd_file = '%s%s.dxd' % (self.dxd_folder, logger)
+				if not self.is_file(dxd_file):
+					continue
+			else:
+				dxd_file = "None"
 
-			#find the right DXD file for the logger of this sensor
-			dxd_file = '%s%s.dxd' % (self.dxd_folder, logger)
-			if not self.is_file(dxd_file):
-				continue
+				#start the uploading
+				if sensor == sensor_name:
+					for md in sensor_metadata:
+						self.sensor_upload(site_id=site_id,
+						  variable_id=md["variable_id"],
+						  method_id=md["method"],
+						  source_id=1,
+						  resp=md["response"],
+						  dxd_file=dxd_file,
+						  port=port,
+						  sensor=sensor)
 
-			#start the uploading
-			if sensor == sensor_name:
-				for md in sensor_metadata:
-					self.sensor_upload(site_id=site_id,
-									   variable_id=md["variable_id"],
-									   method_id=md["method"],
-									   source_id=1,
-									   resp=md["response"],
-									   dxd_file=dxd_file,
-									   port=port,
-									   sensor=sensor)
-	
-def get_timestamp(updater):
+
+def get_timestamp(updater, namespace):
 	#this method loops through a set of 5 sites and variables, gets the latest dates from each from the database
-	#and compares them to find the most recent to avoid uploading old values again
+	#and compares them to find the most recent to avoid uploading old values again. An argument can be passed
+	#in to specify not to use dxd files, but to upload from xls files instead. 
 
 	from suds.client import Client
 	client = Client("http://worldwater.byu.edu/app/index.php/rushvalley/services/cuahsi_1_1.asmx?WSDL")
@@ -236,11 +261,8 @@ def get_timestamp(updater):
 		except Exception:
 			print "Failed to get timestamp from database for site " + site + " and variable " + variable
 
+
 	#uses optional arg as another date if present
-	parser = argparse.ArgumentParser(description = "Downloads data from Decagon server in .dxd files\n" +
-		"Optionally accepts a timestamp argument, which it uses to ignore old values already uploaded")
-	parser.add_argument("-lt", "--latest_upload_time", help="String of latest upload time. Ex. '2015-06-15 00:00:00'")
-	namespace = parser.parse_args()
 	if namespace.latest_upload_time != None:
 		old_time_str = namespace.latest_upload_time
 		try:
@@ -255,12 +277,25 @@ def get_timestamp(updater):
 
 if __name__ == '__main__':
 
-	#STEP 1: Get the data from DECAGON data loggers
-	decagon.download_all('passwords.csv','dxd')
+	parser = argparse.ArgumentParser(description = "Downloads data from Decagon server in .dxd files\n" +
+		"Optionally accepts a timestamp argument, which it uses to ignore old values already uploaded. " + 
+		"Additionally, the optional xls argument causes script to upload from a local xls file instead " 
+		"of a downloaded dxd file (for offline logger manual upload).")
+	parser.add_argument("-lt", "--latest_upload_time", help="String of latest upload time. Ex. '2015-06-15 00:00:00'")
+	parser.add_argument("-xls", "--xls_file", help="Name of xls file to use instead of .dxd files, for manual upload.",
+	type=argparse.FileType('r'))
+
+	namespace = parser.parse_args()
+	
+	#If xls file passed in, dxd files not used
+	if (namespace.xls_file != None):
+		#STEP 1: Get the data from DECAGON data loggers
+		decagon.download_all('passwords.csv','dxd')
 
 	#STEP 2: Upload the data to HydroServer
 	u = Updater()
 	get_timestamp(u)
+	u.manual_upload_file = namespace.xls_file;
 
 	u.dxd_folder = 'dxd/'
 	u.upload_data('SRS')
