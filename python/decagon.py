@@ -4,8 +4,12 @@ __author__ = 'Jiri'
 from lxml import etree
 import requests
 import csv
+import xlrd
 import sys
 import argparse
+from dateutil.parser import parse
+import time
+import datetime
 
 
 ########################################
@@ -23,7 +27,7 @@ def is_file(filename):
 
 ##########################################################
 # download all dxd files that are listed in the file	 #
-# passwords.csv.										 #
+# passwords.csv.				 #
 ##########################################################
 def download_all(password_file, output_folder):
 	with open(password_file) as csvfile:
@@ -40,7 +44,7 @@ def download_all(password_file, output_folder):
 
 ##########################################################
 # downloads the dxd file, given the device id, device	#
-# password, and the MRID number.						 #
+# password, and the MRID number.			 #
 # if MRID is 0, then all of the data shall be downloaded #
 ##########################################################
 def download_dxd(device_id, device_password, mr_id, output_folder):
@@ -56,7 +60,7 @@ def download_dxd(device_id, device_password, mr_id, output_folder):
 		print('file_name: ' + file_name + ' mrid: ' + str(mr_id))
 
 	payload = {'email': email, 'userpass': user_password, 'report': report, 'deviceid': device_id,
-			   'devicepass': device_password, 'mrid': mr_id}
+	  'devicepass': device_password, 'mrid': mr_id}
 	r = requests.post(url, data=payload)
 
 	with open(file_name, 'wb') as fd:
@@ -64,8 +68,8 @@ def download_dxd(device_id, device_password, mr_id, output_folder):
 			fd.write(chunk)
 
 ##########################################################
-# reads the MRID from the dxd file					   #
-# the MRID indicates the last download of the data	   #
+# reads the MRID from the dxd file		#
+# the MRID indicates the last download of the data	#
 ##########################################################
 def read_mrid(dxd_file):
 	txt = "no data found"
@@ -105,6 +109,46 @@ def read_dxd(dxd_file, port):
 		result["vals"].append(int(items[port]))
 	return result
 
+#############################################################
+# Reads the xls file and checks the response of the file. 	#
+# Returns a dictionary with raw dates and raw values.	 	#
+# Loops through the rows and store the values in dictionary.#
+# Loops by getting the values of the first column. They		#
+# should be the timestamps, so if one is not set, it should #
+# the n+1, and loop is done. Assumes that the first three 	#
+# rows are metadata											#
+#############################################################
+def read_xls(xls_file, port):
+	book = xlrd.open_workbook(xls_file)
+	sheet0 = book.sheet_by_index(0)
+	result = [] 
+
+	row_num = 0
+	row = sheet0.row(row_num)
+	keep_reading = True
+	while keep_reading:
+		if len(row) < port:
+			raise ValueError('File %s does not have data from port %s' %(xls_file, port))
+		if row_num > 2: #the first three rows are metadata
+			raw_date = row[0].value
+			raw_val = row[port].value
+
+			if raw_date == None or raw_date == "" or raw_val == None or raw_val == "":
+				continue; #no value for this time, so skip
+
+			year, month, day, hour, minute, second = xlrd.xldate_as_tuple(raw_date, book.datemode)
+			date_obj = datetime.datetime(year, month, day, hour, second)
+			date = str(date_obj)	
+			
+			pair = date, raw_val
+			result.append(pair)
+		row_num += 1
+		try:
+			row = sheet0.row(row_num)
+		except:
+			keep_reading = False
+	return result
+	
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description = "Download Datalogger data from decagon site in .dxd format.\n" +
