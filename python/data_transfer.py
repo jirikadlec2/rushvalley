@@ -135,7 +135,7 @@ class Updater(object):
 
 		#reading the new data from the dxd file
 		if (self.manual_upload_file != None):
-			new_data['values'] =  decagon.read_xls(u.manual_upload_file.name, port)
+			new_data['values'] =  decagon.read_xls(u.manual_upload_file.name, port, self.old_timestamp)
 		else:
 			raw_data = decagon.read_dxd(dxd_file, port)
 		
@@ -156,7 +156,7 @@ class Updater(object):
 		#the data is sent in the JSON format as the body of the request
 		payload = json.dumps(new_data)
 		print "payload " + str(payload)
-
+		sys.exit()
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
@@ -166,8 +166,7 @@ class Updater(object):
 			response = urllib2.urlopen(req, payload)
 			status = json.load(response)
 			print status
-
-	   except urllib2.HTTPError, e:
+		except urllib2.HTTPError, e:
 			print e.code
 			print e.msg
 			print e.headers

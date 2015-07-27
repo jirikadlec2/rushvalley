@@ -118,7 +118,7 @@ def read_dxd(dxd_file, port):
 # the n+1, and loop is done. Assumes that the first three 	#
 # rows are metadata											#
 #############################################################
-def read_xls(xls_file, port):
+def read_xls(xls_file, port, old_timestamp):
 	book = xlrd.open_workbook(xls_file)
 	sheet0 = book.sheet_by_index(0)
 	result = [] 
@@ -133,15 +133,17 @@ def read_xls(xls_file, port):
 			raw_date = row[0].value
 			raw_val = row[port].value
 
-			if raw_date == None or raw_date == "" or raw_val == None or raw_val == "":
-				continue; #no value for this time, so skip
+			if raw_date != None and raw_date != "" and raw_val != None and raw_val != "":
+				year, month, day, hour, minute, second = xlrd.xldate_as_tuple(raw_date, book.datemode)
+				date_obj = datetime.datetime(year, month, day, hour, second)
 
-			year, month, day, hour, minute, second = xlrd.xldate_as_tuple(raw_date, book.datemode)
-			date_obj = datetime.datetime(year, month, day, hour, second)
-			date = str(date_obj)	
-			
-			pair = date, raw_val
-			result.append(pair)
+				#don't include old values
+				if old_timestamp != "none":
+					if date_obj > old_timestamp:
+						date = str(date_obj)	
+						pair = date, raw_val
+						result.append(pair)
+
 		row_num += 1
 		try:
 			row = sheet0.row(row_num)
