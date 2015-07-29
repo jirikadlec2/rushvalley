@@ -5,7 +5,7 @@
 3. data\_transfer.py runs the operarations in decagon.py and converter.py to upload data to rush\_valley
 4. clean\_logs.py manages the log files saved from automated executions of data\_transfer.py and keeps ony the 14 newest
 5. passwords.csv has the passwords used by decagon.dxd to get datalogger data from the Decagon API in dxd format
-6. 01\_LookupTable.xlsx is used by data\_transfer.py to look up the relevant info about each logger (logger ID, Site ID, Lat, Lon, Port Number, Sensor ID, Variables)
+6. 01\_LookupTable.xlsx is used by data\_transfer.py to look up the relevant info about each logger (logger ID, Site ID, Lat, Long, Port Number, Sensor ID, Variables)
 7. dxd/ holds the dxd files from Decagon with datalogger information. These files have all but the most recent data removed each time data\_transfer.py runs, 
 but they are also deleted when run automatically because they are not needed and tend to cause upload problems
 8. runUpload.sh is used on the worldwater.byu.edu server to run the entire suite of scripts automatically. It is executed by a crontab command every Monday morning at 1AM
