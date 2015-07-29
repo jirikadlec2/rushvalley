@@ -1,4 +1,4 @@
-##This suite of scripts handles both automated and manual data upload to the hydroserver database at worldwater.byu.edu named "rush\_valley". 
+#This suite of scripts handles both automated and manual data upload to the hydroserver database at worldwater.byu.edu named "rush\_valley". 
 
 1. decagon.py handles getting the data from Decagon in dxd files, parsing xls files downloaded directly from dataloggers
 2. converter.py decodes the data from dxd files into usable values
@@ -12,3 +12,14 @@
 To run manually, data\_transfer.py must be executed with the -xls option and a file in .xls format. 5G0E3559-sample.xls is a sample xls file to show correct formatting.
 The files will have two tabs; the scripts do not upload the data from the "Unprocessed Data" tab. data\_transfer.py uses functionality from decagon.py to parse the xls files.
 
+###Important###
+Before running manual upload, query most recent upload for the site. The site name is in the filenames from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
+the site name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the ID for that site, in the Site column of the table.
+Use that ID to execute the following SQL statement in MYSQLWorkbench: 
+`SELECT LocalDateTime FROM rush\_valley.datavalues AS dv JOIN rush\_valley.sites as s ON s.SiteID = dv.SiteID WHERE s.SiteCode = "Ru1BMP5" ORDER BY LocalDateTime DESC LIMIT 1;`.
+Replace "Ru1BMP5" with the ID from the lookup table. The result of the SQL query will be a timestamp of the most recent upload from that logger to the database. 
+Values older than that should already be present, so to avoid duplicates we include the timestamp.
+Use that timestamp (right-click it in workbench, click "Open Value in Viewer", go to "Text" tab, copy and paste) as the -lt argument for data\_transfer.py.
+The command to run the upload should look like this:
+`./data_transfer.py -lt '2015-06-15 00:00:00' -xls manual_files/rush150326/5G0E3559_27Mar15-1046.xls`
+Don't forget to enclose the timestamp in quotes and make sure the full path to the data file is present.
