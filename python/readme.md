@@ -13,7 +13,7 @@ but they are also deleted when run automatically because they are not needed and
 To run manually, data\_transfer.py must be executed with the -xls option and a file in .xls format. 5G0E3559-sample.xls is a sample xls file to show correct formatting.
 The files will have two tabs; the scripts do not upload the data from the "Unprocessed Data" tab. data\_transfer.py uses functionality from decagon.py to parse the xls files.
 
-###Important###
+###Important For Manual Upload###
 Before running manual upload, query most recent upload for the site. The site name is in the filenames from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
 the site name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the codes for that site, in the Site column of the table.
 Use those codes to execute the following SQL statement in MYSQLWorkbench: 
