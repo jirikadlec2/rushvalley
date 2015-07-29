@@ -3,7 +3,7 @@
 1. decagon.py handles getting the data from Decagon in dxd files, parsing xls files downloaded directly from dataloggers
 2. converter.py decodes the data from dxd files into usable values
 3. data\_transfer.py runs the operarations in decagon.py and converter.py to upload data to rush\_valley
-4. clean\_logs.py manages the log files saved from automated executions of data\_transfer.py and keeps ony the 14 newest
+4. clean\_logs.py manages the log files saved from automated executions of data\_transfer.py and keeps only the 14 newest
 5. passwords.csv has the passwords used by decagon.dxd to get datalogger data from the Decagon API in dxd format
 6. 01\_LookupTable.xlsx is used by data\_transfer.py to look up the relevant info about each logger (logger ID, Site ID, Lat, Long, Port Number, Sensor ID, Variables)
 7. dxd/ holds the dxd files from Decagon with datalogger information. These files have all but the most recent data removed each time data\_transfer.py runs, 
