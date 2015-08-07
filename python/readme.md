@@ -19,7 +19,7 @@ The files will have two tabs; the scripts do not upload the data from the "Unpro
 ###Important For Manual Upload###
 Before running manual upload, query most recent upload date for the datalogger. The datalogger name is in each filename from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
 the datalogger name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the site codes for that datalogger, in the Site column of the table (Sheet 1).
-Use those codes to execute the following SQL statement in MYSQLWorkbench: 
+Use those codes to execute the following SQL statement in MYSQLWorkbench (you can find Workbench help [here](https://github.com/jirikadlec2/rushvalley/wiki/Accessing-the-database-using-MYSQL-Workbench)): 
 ```
 SELECT LocalDateTime FROM rush_valley.datavalues AS dv 
 JOIN rush_valley.sites as s 
