@@ -37,10 +37,8 @@ The command to run the upload should look like this:
 ```
 Don't forget to enclose the timestamp in quotes and make sure the full path to the data file is present.
 
-Use the -h option to view help or the -v option to view additional output
+Use the -h option to view help and other options (-v prints out information for debugging, -nu doesn't upload data to database)
 ```
 ./data_transfer.py -h 
-
-./data_transfer.py -v
 ```
 
