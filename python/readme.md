@@ -36,3 +36,11 @@ The command to run the upload should look like this:
 ./data_transfer.py -lt '2015-06-15 00:00:00' -xls manual_files/rush150326/5G0E3559_27Mar15-1046.xls
 ```
 Don't forget to enclose the timestamp in quotes and make sure the full path to the data file is present.
+
+Use the -h option to view help or the -v option to view additional output
+```
+./data_transfer.py -h 
+
+./data_transfer.py -v
+```
+
