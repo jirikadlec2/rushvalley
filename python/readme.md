@@ -18,12 +18,16 @@ The files will have two tabs; the scripts do not upload the data from the "Unpro
 
 ###Important For Manual Upload###
 Before running manual upload, query most recent upload date for the datalogger. The site name is in each filename from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
-the site name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the codes for that site, in the Site column of the table.
+the site name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the codes for that site, in the Site column of the table (Sheet 1).
 Use those codes to execute the following SQL statement in MYSQLWorkbench: 
 ```
-SELECT LocalDateTime FROM rush_valley.datavalues AS dv JOIN rush_valley.sites as s ON s.SiteID = dv.SiteID WHERE s.SiteCode = "Ru1BMP5" OR s.SiteCode = "Ru1BMP30" OR s.SiteCode = "Ru1BMPA" OR s.SiteCode = "Ru1BMNU" ORDER BY LocalDateTime DESC LIMIT 1;
+SELECT LocalDateTime FROM rush_valley.datavalues AS dv 
+JOIN rush_valley.sites as s 
+ON s.SiteID = dv.SiteID 
+WHERE s.SiteCode IN ("Ru1BMP5", "Ru1BMP30", "Ru1BMPA", "Ru1BMNU")
+ORDER BY LocalDateTime DESC LIMIT 1;
 ```
-Replace "Ru1BMP5" and the other SiteCodes with the codes from the lookup table, modifying the number of OR statements as necessary.
+Replace "Ru1BMP5" and the other SiteCodes with the codes from the lookup table.
 The result of the SQL query will be a timestamp of the most recent upload from that logger to the database. 
 Values older than that should already be present, so to avoid duplicates we include the timestamp.
 Use that timestamp (right-click it in Workbench, click "Open Value in Viewer", go to "Text" tab, copy and paste) as the -lt argument for data\_transfer.py.
