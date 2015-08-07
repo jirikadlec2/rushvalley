@@ -24,6 +24,7 @@ class Updater(object):
 		self.dxd_folder = 'dxd'
 		self.xlsfile = "01-LookupTable.xlsx"
 		self.old_timestamp = "none"
+		self.verbose = False
 
 	# checks if the file is a file or not
 	def is_file(self, filename):
@@ -73,6 +74,8 @@ class Updater(object):
 	def get_sensor_metadata(self, sensor):
 		book = xlrd.open_workbook(self.xlsfile)
 		sheets = book.sheets()
+		if self.verbose:
+			print "filename" + self.xlsfile
 		sheet1 = sheets[1]
 		nr = sheet1.nrows
 		lookup = []
@@ -86,7 +89,8 @@ class Updater(object):
 			#find the corresponding variable ID
 			variable_id = self.get_variable_id(variable_code)
 			if variable_id is None:
-				print 'VariableID not found on server for VariableCode: ' + variable_code
+				if self.verbose:
+					print 'VariableID not found on server for VariableCode: ' + variable_code
 				continue
 
 			method_id = int(sheet1.cell_value(i, 3))
@@ -122,7 +126,7 @@ class Updater(object):
 	# The site_id, variable_id, method_id , and source_id must be valid   	#
 	# ID's that already exist in the database.								#
 	#########################################################################
-	def sensor_upload(self, site_id, variable_id, method_id, source_id, dxd_file, port, sensor, resp):
+	def sensor_upload(self, site_id, variable_id, method_id, source_id, upload_file, port, sensor, resp):
 		new_data = {
 				"user": self.HYDROSERVER_USER,
 				"password": self.HYDROSERVER_PASSWORD,
@@ -132,12 +136,11 @@ class Updater(object):
 				"SourceID": source_id,
 				"values":[]
 		}
-
 		#reading the new data from the dxd file
 		if (self.manual_upload_file != None):
-			new_data['values'] =  decagon.read_xls(u.manual_upload_file.name, port, self.old_timestamp)
+			new_data['values'] =  decagon.read_xls(variable_id, u.manual_upload_file.name, port, self.old_timestamp, self.xlsfile)
 		else:
-			raw_data = decagon.read_dxd(dxd_file, port)
+			raw_data = decagon.read_dxd(upload_file, port)
 		
 			#converting the data from raw data to actual values
 			nr = len(raw_data["dates"])
@@ -152,25 +155,29 @@ class Updater(object):
 				if self.old_timestamp != "none":
 					if local_time_obj > self.old_timestamp:
 						new_data["values"].append((local_time, val))
-		
+					else:
+						new_data["values"].append((local_time, val))
+
 		#the data is sent in the JSON format as the body of the request
 		payload = json.dumps(new_data)
-		print "payload " + str(payload)
-		sys.exit()
+		if self.verbose:
+			print "payload " + str(payload)
+		
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
 
-		#upload the data to the web and check for any error status codes
-		try:
-			response = urllib2.urlopen(req, payload)
-			status = json.load(response)
-			print status
-		except urllib2.HTTPError, e:
-			print e.code
-			print e.msg
-			print e.headers
-			print e.fp.read()
+#		#upload the data to the web and check for any error status codes
+#		try:
+#			response = urllib2.urlopen(req, payload)
+#			status = json.load(response)
+#			if self.verbose:
+#				print status
+#		except urllib2.HTTPError, e:
+#			print e.code
+#			print e.msg
+#			print e.headers
+#			print e.fp.read()
 
 
 	#this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
@@ -188,27 +195,32 @@ class Updater(object):
 		sheets = book.sheets()
 		sheet0 = sheets[0]
 		nr = sheet0.nrows
+		upload_file = "None"
 		for i in range(1, nr):
 			logger = sheet0.cell_value(i, 0)
 			site_code = sheet0.cell_value(i, 1)
 			port = int(sheet0.cell_value(i, 4))
 			sensor = sheet0.cell_value(i, 5)
-
+			
 			#find the corresponding site ID
 			site_id = self.get_site_id(site_code)
 			if site_id is None:
-				print 'SiteID not found on server for SiteCode: ' + site_code
+				if self.verbose:
+					print 'SiteID not found on server for SiteCode: ' + site_code
 				continue
-			print self.manual_upload_file
+			
 			#if automatically uploading, use dxd files
 			if self.manual_upload_file == None:
 				#find the right DXD file for the logger of this sensor
-				dxd_file = '%s%s.dxd' % (self.dxd_folder, logger)
-				if not self.is_file(dxd_file):
+				upload_file = '%s%s.dxd' % (self.dxd_folder, logger)
+				if not self.is_file(upload_file):
 					continue
 			else:
-				dxd_file = "None"
-
+				upload_file = str(self.manual_upload_file)
+				if str(logger) not in upload_file:
+					continue
+			if self.verbose:
+				print "sensor metadata" + str( sensor_metadata)
 			#start the uploading
 			if sensor == sensor_name:
 				for md in sensor_metadata:
@@ -217,7 +229,7 @@ class Updater(object):
 					  method_id=md["method"],
 					  source_id=1,
 					  resp=md["response"],
-					  dxd_file=dxd_file,
+					  upload_file=upload_file,
 					  port=port,
 					  sensor=sensor)
 
@@ -271,16 +283,18 @@ if __name__ == '__main__':
 	parser.add_argument("-lt", "--latest_upload_time", help="String of latest upload time. Ex. '2015-06-15 00:00:00'")
 	parser.add_argument("-xls", "--xls_file", help="Name of xls file to use instead of .dxd files, for manual upload.",
 	type=argparse.FileType('r'))
+	parser.add_argument("-v", "--verbose", action='store_true', help="Print out messages while running")
 
 	namespace = parser.parse_args()
 
 	#If xls file passed in, dxd files not used
-	if (namespace.xls_file == None):
+	if namespace.xls_file == None:
 		#STEP 1: Get the data from DECAGON data loggers
 		decagon.download_all('passwords.csv','dxd')
 
 	#STEP 2: Upload the data to HydroServer
 	u = Updater()
+	u.verbose = namespace.verbose
 	get_timestamp(u, namespace)
 	u.manual_upload_file = namespace.xls_file;
 

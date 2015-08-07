@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 __author__ = 'Jiri'
 
 from lxml import etree
@@ -10,6 +11,7 @@ import argparse
 from dateutil.parser import parse
 import time
 import datetime
+import unicodedata
 
 
 ########################################
@@ -110,6 +112,29 @@ def read_dxd(dxd_file, port):
 	return result
 
 #############################################################
+# 															#
+#############################################################
+def get_variable_data(var_id, lookup_file):
+	var_id = float(unicodedata.normalize('NFKD', var_id).encode('ascii','ignore'))
+	book = xlrd.open_workbook(lookup_file)
+	var_sheet = book.sheet_by_index(2)
+
+	row_num = 2 #values start in third row
+	result = []
+	
+	while row_num < 18: #there are only 18 rows in the file
+		row = var_sheet.row(row_num)
+		if row[3].value == var_id:
+			for i in range (0, 3):
+				cell_val = row[i].value
+				cell_val = unicodedata.normalize('NFKD', cell_val).encode('ascii','ignore')
+				result.append(cell_val)
+			break
+		row_num += 1
+	return result
+
+
+#############################################################
 # Reads the xls file and checks the response of the file. 	#
 # Returns a dictionary with raw dates and raw values.	 	#
 # Loops through the rows and store the values in dictionary.#
@@ -118,34 +143,47 @@ def read_dxd(dxd_file, port):
 # the n+1, and loop is done. Assumes that the first three 	#
 # rows are metadata											#
 #############################################################
-def read_xls(xls_file, port, old_timestamp):
+def read_xls(var_id, xls_file, port, old_timestamp, lookup_file):
+	variable_data = get_variable_data(var_id, lookup_file)
 	book = xlrd.open_workbook(xls_file)
 	sheet0 = book.sheet_by_index(0)
 	result = [] 
 
 	row_num = 0
 	row = sheet0.row(row_num)
+	header_rows = []
 	keep_reading = True
+	
 	while keep_reading:
-		if len(row) < port:
-			raise ValueError('File %s does not have data from port %s' %(xls_file, port))
-		if row_num > 2: #the first three rows are metadata
+		if row_num < 3: #the first three rows are metadata
+			header_rows.append(row)
+		else:
 			raw_date = row[0].value
-			raw_val = row[port].value
 
-			if raw_date != None and raw_date != "" and raw_val != None and raw_val != "":
+			if raw_date != None and raw_date != "":
 				year, month, day, hour, minute, second = xlrd.xldate_as_tuple(raw_date, book.datemode)
 				date_obj = datetime.datetime(year, month, day, hour, second)
 
 				#don't include old values
 				if old_timestamp != "none":
-					if date_obj > old_timestamp:
-						date = str(date_obj)	
-						pair = date, raw_val
-						result.append(pair)
+					if date_obj <= old_timestamp:
+						continue
+					date = str(date_obj)
+					index = -10
+					for i in range(0, len(row)):
+						line1 = unicodedata.normalize('NFKD', header_rows[1][i].value).encode('ascii','ignore')
+						line2 = unicodedata.normalize('NFKD', header_rows[2][i].value).encode('ascii','ignore')
+						if line1 == variable_data[0] and line2 == variable_data[1]:
+							index = i
+							break
+					if index == -10:
+						print "No data for variable " + str(var_id)
+						break
+					pair = date, row[index].value
+					result.append(pair)
 
-		row_num += 1
 		try:
+			row_num += 1
 			row = sheet0.row(row_num)
 		except:
 			keep_reading = False

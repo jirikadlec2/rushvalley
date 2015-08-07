@@ -124,12 +124,12 @@ class SRSNr(Converter):
 
             #if the sensor returns alpha=1, use the predefined default alpha
             #otherwise, get alpha from the measured incident radiation
-            print "raw_alpha: %s" % ra
+            #print "raw_alpha: %s" % ra
             if ra >= 50 and ra <= 126:
                 alpha = 100.0 / float(ra)
             else:
                 alpha = 1.86
-            print "alpha: %s" % alpha
+            #print "alpha: %s" % alpha
 
             red = self.get_red(raw_value)
             nir = self.get_nir(raw_value)
@@ -260,11 +260,11 @@ class Anemo(Converter):
 
         elif response == 2:
             rs = self.port(raw_value, 20, 29)
-            print rs
+            #print rs
             return 1.006 * rs / 10.0
 
         elif response == 3:
             rg = self.port(raw_value, 10, 19)
-            print rg
+            #print rg
             return 1.006 * rg / 10.0
 
