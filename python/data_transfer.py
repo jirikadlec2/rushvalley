@@ -169,6 +169,7 @@ class Updater(object):
 		req.add_header('Content-Type', 'application/json')
 
 		if self.no_upload:
+			print "No Upload option set, data will not be uploaded"
 			return
 		#upload the data to the web and check for any error status codes
 		try:
