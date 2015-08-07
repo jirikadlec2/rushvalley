@@ -25,6 +25,7 @@ class Updater(object):
 		self.xlsfile = "01-LookupTable.xlsx"
 		self.old_timestamp = "none"
 		self.verbose = False
+		self.no_upload = False
 
 	# checks if the file is a file or not
 	def is_file(self, filename):
@@ -167,17 +168,19 @@ class Updater(object):
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
 
-#		#upload the data to the web and check for any error status codes
-#		try:
-#			response = urllib2.urlopen(req, payload)
-#			status = json.load(response)
-#			if self.verbose:
-#				print status
-#		except urllib2.HTTPError, e:
-#			print e.code
-#			print e.msg
-#			print e.headers
-#			print e.fp.read()
+		if self.no_upload:
+			return
+		#upload the data to the web and check for any error status codes
+		try:
+			response = urllib2.urlopen(req, payload)
+			status = json.load(response)
+			if self.verbose:
+				print status
+		except urllib2.HTTPError, e:
+			print e.code
+			print e.msg
+			print e.headers
+			print e.fp.read()
 
 
 	#this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
@@ -284,7 +287,8 @@ if __name__ == '__main__':
 	parser.add_argument("-xls", "--xls_file", help="Name of xls file to use instead of .dxd files, for manual upload.",
 	type=argparse.FileType('r'))
 	parser.add_argument("-v", "--verbose", action='store_true', help="Print out messages while running")
-
+	parser.add_argument("-nu", "--no_upload", action='store_true', help="Don't upload data, used for testing")
+	
 	namespace = parser.parse_args()
 
 	#If xls file passed in, dxd files not used
@@ -295,6 +299,7 @@ if __name__ == '__main__':
 	#STEP 2: Upload the data to HydroServer
 	u = Updater()
 	u.verbose = namespace.verbose
+	u.no_upload = namespace.no_upload
 	get_timestamp(u, namespace)
 	u.manual_upload_file = namespace.xls_file;
 
