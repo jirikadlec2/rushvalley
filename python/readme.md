@@ -17,8 +17,8 @@ To run manually, data\_transfer.py must be executed with the -xls option and a f
 The files will have two tabs; the scripts do not upload the data from the "Unprocessed Data" tab. data\_transfer.py uses functionality from decagon.py to parse the xls files.
 
 ###Important For Manual Upload###
-Before running manual upload, query most recent upload date for the datalogger. The site name is in each filename from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
-the site name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the codes for that site, in the Site column of the table (Sheet 1).
+Before running manual upload, query most recent upload date for the datalogger. The datalogger name is in each filename from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
+the datalogger name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the site codes for that datalogger, in the Site column of the table (Sheet 1).
 Use those codes to execute the following SQL statement in MYSQLWorkbench: 
 ```
 SELECT LocalDateTime FROM rush_valley.datavalues AS dv 
