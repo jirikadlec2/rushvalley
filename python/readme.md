@@ -1,4 +1,6 @@
-#This suite of scripts handles both automated and manual data upload to the hydroserver database at worldwater.byu.edu named "rush\_valley". 
+#Automated And Manual Data Upload
+
+This suite of scripts handles both automated and manual data upload to the hydroserver database at worldwater.byu.edu named "rush\_valley". 
 
 1. decagon.py handles getting the data from Decagon in dxd files, or parsing xls files downloaded directly from dataloggers if uploading manually
 2. converter.py decodes the data from dxd files into usable values
