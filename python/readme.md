@@ -12,4 +12,4 @@ This suite of scripts handles both automated and manual data upload to the hydro
 but they are also deleted when run automatically because they are not needed and tend to cause upload problems
 8. runUpload.sh is used on the worldwater.byu.edu server to run the entire suite of scripts automatically. It is executed by a crontab command every Monday morning at 1AM
 9. name\_fixer.py can be used to strip whitespace from filenames, as dataloggers automatically put whitespace in
-10. manual\_
+10. manual\_upload.sh contains commands to manually upload from a set of files downloaded directly from dataloggers
