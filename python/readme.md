@@ -12,33 +12,3 @@ This suite of scripts handles both automated and manual data upload to the hydro
 but they are also deleted when run automatically because they are not needed and tend to cause upload problems
 8. runUpload.sh is used on the worldwater.byu.edu server to run the entire suite of scripts automatically. It is executed by a crontab command every Monday morning at 1AM
 9. name\_fixer.py can be used to strip whitespace from filenames, as dataloggers automatically put whitespace in
-
-To run manually, data\_transfer.py must be executed with the -xls option and a file in .xls format. 5G0E3559-sample.xls is a sample xls file to show correct formatting.
-The files will have two tabs; the scripts do not upload the data from the "Unprocessed Data" tab. data\_transfer.py uses functionality from decagon.py to parse the xls files.
-
-###Important For Manual Upload###
-Before running manual upload, query most recent upload date for the datalogger. The datalogger name is in each filename from the loggers. For example, if the filename is "5G0E3559 27Mar15-1046.xls",
-the datalogger name is "5G0E3559". Use the lookup table "01-LookupTable.xlsx" to find the site codes for that datalogger, in the Site column of the table (Sheet 1).
-Use those codes to execute the following SQL statement in MySQLWorkbench (you can find Workbench help [here](https://github.com/jirikadlec2/rushvalley/wiki/Accessing-the-database-using-MYSQL-Workbench)): 
-```
-SELECT LocalDateTime FROM rush_valley.datavalues AS dv 
-JOIN rush_valley.sites as s 
-ON s.SiteID = dv.SiteID 
-WHERE s.SiteCode IN ("Ru1BMP5", "Ru1BMP30", "Ru1BMPA", "Ru1BMNU")
-ORDER BY LocalDateTime DESC LIMIT 1;
-```
-Replace "Ru1BMP5" and the other SiteCodes with the codes from the lookup table.
-The result of the SQL query will be a timestamp of the most recent upload from that logger to the database. 
-Values older than that should already be present, so to avoid duplicates we include the timestamp.
-Use that timestamp (right-click it in Workbench, click "Open Value in Viewer", go to "Text" tab, copy and paste) as the -lt argument for data\_transfer.py.
-The command to run the upload should look like this:
-```
-./data_transfer.py -lt '2015-06-15 00:00:00' -xls manual_files/rush150326/5G0E3559_27Mar15-1046.xls
-```
-Don't forget to enclose the timestamp in quotes and make sure the full path to the data file is present.
-
-Use the -h option to view help and other options (-v prints out information for debugging, -nu doesn't upload data to database)
-```
-./data_transfer.py -h 
-```
-
