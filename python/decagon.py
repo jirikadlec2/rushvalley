@@ -112,27 +112,51 @@ def read_dxd(dxd_file, port):
 	return result
 
 #############################################################
-# 															#
+# Opens the lookup file and gets the general name, specific #
+# name, and variable code for the variable requested		#
 #############################################################
 def get_variable_data(var_id, lookup_file):
-	var_id = float(unicodedata.normalize('NFKD', var_id).encode('ascii','ignore'))
 	book = xlrd.open_workbook(lookup_file)
 	var_sheet = book.sheet_by_index(2)
 
 	row_num = 2 #values start in third row
-	result = []
-	
+	result = {
+		'gen_name': "",
+		'spec_name': "",
+		'var_code': "",
+		'var_id': var_id
+	}
+	header_row = var_sheet.row(0)
 	while row_num < 18: #there are only 18 rows in the file
 		row = var_sheet.row(row_num)
+		row_num += 1
 		if row[3].value == var_id:
+			data_array = []
 			for i in range (0, 3):
 				cell_val = row[i].value
 				cell_val = unicodedata.normalize('NFKD', cell_val).encode('ascii','ignore')
-				result.append(cell_val)
+				data_array.append(cell_val)
+			result['gen_name'] = data_array[0]
+			result['spec_name'] = data_array[1]
+			result['var_code'] = data_array[2]
 			break
-		row_num += 1
 	return result
 
+#############################################################
+# Checks whether the given site, logger, and port are a 	#
+# valid combination											#
+#############################################################
+def validate_site(site_code, logger_name, port, lookup_file):
+	book = xlrd.open_workbook(lookup_file)
+	main_sheet = book.sheet_by_index(0)
+	row_num = 1 #data starts on second row
+	
+	while row_num < 105: #there are 105 rows
+		row = main_sheet.row(row_num)
+		row_num += 1
+		if row[0].value == logger_name and row[1].value == site_code and row[4].value == port:
+			return True
+	return False
 
 #############################################################
 # Reads the xls file and checks the response of the file. 	#
@@ -143,8 +167,16 @@ def get_variable_data(var_id, lookup_file):
 # the n+1, and loop is done. Assumes that the first three 	#
 # rows are metadata											#
 #############################################################
-def read_xls(var_id, xls_file, port, old_timestamp, lookup_file):
+def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, lookup_file):
+	var_id = float(unicodedata.normalize('NFKD', var_id).encode('ascii','ignore'))
+	if not validate_site(site_code, logger_name, port, lookup_file):
+		print "Invalid site, port combination with site " + str(site_code) + " and port " + str(port)
+		return
 	variable_data = get_variable_data(var_id, lookup_file)
+	if variable_data['gen_name'] == "":
+		print "No data for variable " + str(var_id) + " in logger: " + str(logger)
+		return
+	
 	book = xlrd.open_workbook(xls_file)
 	sheet0 = book.sheet_by_index(0)
 	result = [] 
@@ -165,19 +197,20 @@ def read_xls(var_id, xls_file, port, old_timestamp, lookup_file):
 				date_obj = datetime.datetime(year, month, day, hour, second)
 
 				#don't include old values
-				if old_timestamp != "none":
-					if date_obj <= old_timestamp:
-						continue
+				if old_timestamp == "none" or date_obj > old_timestamp:
 					date = str(date_obj)
 					index = -10
-					for i in range(0, len(row)):
+					for i in range(1, len(row)):
+						line0 = unicodedata.normalize('NFKD', header_rows[0][i].value).encode('ascii','ignore')
 						line1 = unicodedata.normalize('NFKD', header_rows[1][i].value).encode('ascii','ignore')
 						line2 = unicodedata.normalize('NFKD', header_rows[2][i].value).encode('ascii','ignore')
-						if line1 == variable_data[0] and line2 == variable_data[1]:
+						local_port = line0.split()[1]
+
+						if int(local_port) == port and line1 == variable_data['gen_name'] and line2 == variable_data['spec_name']:
 							index = i
 							break
 					if index == -10:
-						print "No data for variable " + str(var_id)
+						print "No data for variable " + str(var_id) + " in logger: " + str(logger_name)
 						break
 					pair = date, row[index].value
 					result.append(pair)
