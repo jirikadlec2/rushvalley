@@ -127,7 +127,7 @@ class Updater(object):
 	# The site_id, variable_id, method_id , and source_id must be valid   	#
 	# ID's that already exist in the database.								#
 	#########################################################################
-	def sensor_upload(self, site_id, variable_id, method_id, source_id, upload_file, port, sensor, resp):
+	def sensor_upload(self, site_id, site_code, variable_id, method_id, source_id, upload_file, port, sensor, resp, logger):
 		new_data = {
 				"user": self.HYDROSERVER_USER,
 				"password": self.HYDROSERVER_PASSWORD,
@@ -139,7 +139,7 @@ class Updater(object):
 		}
 		#reading the new data from the dxd file
 		if (self.manual_upload_file != None):
-			new_data['values'] =  decagon.read_xls(variable_id, u.manual_upload_file.name, port, self.old_timestamp, self.xlsfile)
+			new_data['values'] =  decagon.read_xls(variable_id, site_code, u.manual_upload_file.name, port, self.old_timestamp, logger, self.xlsfile)
 		else:
 			raw_data = decagon.read_dxd(upload_file, port)
 		
@@ -159,10 +159,14 @@ class Updater(object):
 					else:
 						new_data["values"].append((local_time, val))
 
+		#if there's no data, return
+		if len(new_data["values"]) <= 0:
+			if self.verbose:
+				print "No data to upload: " + str(new_data)
+			return
 		#the data is sent in the JSON format as the body of the request
 		payload = json.dumps(new_data)
-		if self.verbose:
-			print "payload " + str(payload)
+		print "payload " + str(payload)
 		
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
@@ -175,8 +179,7 @@ class Updater(object):
 		try:
 			response = urllib2.urlopen(req, payload)
 			status = json.load(response)
-			if self.verbose:
-				print status
+			print status
 		except urllib2.HTTPError, e:
 			print e.code
 			print e.msg
@@ -229,13 +232,15 @@ class Updater(object):
 			if sensor == sensor_name:
 				for md in sensor_metadata:
 					self.sensor_upload(site_id=site_id,
+					  site_code=site_code,
 					  variable_id=md["variable_id"],
 					  method_id=md["method"],
 					  source_id=1,
 					  resp=md["response"],
 					  upload_file=upload_file,
 					  port=port,
-					  sensor=sensor)
+					  sensor=sensor,
+					  logger=logger)
 
 
 def get_timestamp(updater, namespace):
