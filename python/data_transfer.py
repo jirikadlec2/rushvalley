@@ -128,6 +128,7 @@ class Updater(object):
 	# ID's that already exist in the database.								#
 	#########################################################################
 	def sensor_upload(self, site_id, site_code, variable_id, method_id, source_id, upload_file, port, sensor, resp, logger):
+		print self.old_timestamp
 		new_data = {
 				"user": self.HYDROSERVER_USER,
 				"password": self.HYDROSERVER_PASSWORD,
@@ -244,18 +245,24 @@ class Updater(object):
 
 
 def get_timestamp(updater, namespace):
-	#this method loops through a set of 5 sites and variables, gets the latest dates from each from the database
+	#this method loops through a set of 10 sites and variables, gets the latest dates from each from the database
 	#and compares them to find the most recent to avoid uploading old values again. An argument can be passed
 	#in to specify not to use dxd files, but to upload from xls files instead. 
 
 	from suds.client import Client
 	client = Client("http://worldwater.byu.edu/app/index.php/rushvalley/services/cuahsi_1_1.asmx?WSDL")
+	#maps site IDs to variable codes
 	sites_dict = { 
 		'Ru2BNM5': 'GS3_Moisture_Temp',
 		'Ru2BNMA': 'SRS_Nr_NDVI_sixthirty',
 		'Ru4BNC5': 'GS3_Moisture_VWC',
 		'Ru1BNC5': 'GS3_Moisture_EC',
-		'Ru1BMNA': 'SRS_Nr_NDVI_eighthundred'
+		'Ru1BMNA': 'SRS_Nr_NDVI_eighthundred',
+		'Ru1BNCA': 'SRS_Nr_NDVI',
+		'Ru3BMMA': 'SRS_Nr_NDVI_eighthundred',
+		'Ru5BMMA': 'SRS_Nr_NDVI',
+		'Ru2BMPA': 'SRS_Nr_NDVI_sixthirty',
+		'Ru5BMM5': 'GS3_Moisture_EC'
 	}
 
 	for site in sites_dict:
@@ -264,13 +271,15 @@ def get_timestamp(updater, namespace):
 		obj = client.service.GetValuesObject(site, variable )
 		try:
 			inner_time = obj.timeSeries[0].values[0].value[-1]._dateTime
+			print inner_time
 			if updater.old_timestamp == "none":
 				updater.old_timestamp = inner_time
 			elif inner_time > updater.old_timestamp:
 				updater.old_timestamp = inner_time
 		except Exception:
 			print "Failed to get timestamp from database for site " + site + " and variable " + variable
-
+	print "thing: " + str(updater.old_timestamp)
+	sys.exit()
 
 	#uses optional arg as another date if present
 	if namespace.latest_upload_time != None:
@@ -300,6 +309,7 @@ if __name__ == '__main__':
 	#If xls file passed in, dxd files not used
 	if namespace.xls_file == None:
 		#STEP 1: Get the data from DECAGON data loggers
+		print "fetch"
 		decagon.download_all('passwords.csv','dxd')
 
 	#STEP 2: Upload the data to HydroServer
