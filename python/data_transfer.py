@@ -128,7 +128,6 @@ class Updater(object):
 	# ID's that already exist in the database.								#
 	#########################################################################
 	def sensor_upload(self, site_id, site_code, variable_id, method_id, source_id, upload_file, port, sensor, resp, logger):
-		print self.old_timestamp
 		new_data = {
 				"user": self.HYDROSERVER_USER,
 				"password": self.HYDROSERVER_PASSWORD,
@@ -157,8 +156,9 @@ class Updater(object):
 				if self.old_timestamp != "none":
 					if local_time_obj > self.old_timestamp:
 						new_data["values"].append((local_time, val))
-					else:
-						new_data["values"].append((local_time, val))
+				else:
+					print "Error: No timestamp given for latest update. Rerun with timestamp"
+					sys.exit()
 
 		#if there's no data, return
 		if len(new_data["values"]) <= 0:
@@ -172,20 +172,19 @@ class Updater(object):
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
-
 		if self.no_upload:
 			print "No Upload option set, data will not be uploaded"
-			return
-		#upload the data to the web and check for any error status codes
-		try:
-			response = urllib2.urlopen(req, payload)
-			status = json.load(response)
-			print status
-		except urllib2.HTTPError, e:
-			print e.code
-			print e.msg
-			print e.headers
-			print e.fp.read()
+		else:
+			#upload the data to the web and check for any error status codes
+			try:
+				response = urllib2.urlopen(req, payload)
+				status = json.load(response)
+				print status
+			except urllib2.HTTPError, e:
+				print e.code
+				print e.msg
+				print e.headers
+				print e.fp.read()
 
 
 	#this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
@@ -278,8 +277,6 @@ def get_timestamp(updater, namespace):
 				updater.old_timestamp = inner_time
 		except Exception:
 			print "Failed to get timestamp from database for site " + site + " and variable " + variable
-	print "thing: " + str(updater.old_timestamp)
-	sys.exit()
 
 	#uses optional arg as another date if present
 	if namespace.latest_upload_time != None:
@@ -309,7 +306,6 @@ if __name__ == '__main__':
 	#If xls file passed in, dxd files not used
 	if namespace.xls_file == None:
 		#STEP 1: Get the data from DECAGON data loggers
-		print "fetch"
 		decagon.download_all('passwords.csv','dxd')
 
 	#STEP 2: Upload the data to HydroServer
