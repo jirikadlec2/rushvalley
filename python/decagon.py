@@ -176,7 +176,6 @@ def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, look
 	if variable_data['gen_name'] == "":
 		print "No data for variable " + str(var_id) + " in logger: " + str(logger)
 		return
-	
 	book = xlrd.open_workbook(xls_file)
 	sheet0 = book.sheet_by_index(0)
 	result = [] 
@@ -185,7 +184,7 @@ def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, look
 	row = sheet0.row(row_num)
 	header_rows = []
 	keep_reading = True
-	
+
 	while keep_reading:
 		if row_num < 3: #the first three rows are metadata
 			header_rows.append(row)
@@ -205,6 +204,8 @@ def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, look
 						line1 = unicodedata.normalize('NFKD', header_rows[1][i].value).encode('ascii','ignore')
 						line2 = unicodedata.normalize('NFKD', header_rows[2][i].value).encode('ascii','ignore')
 						local_port = line0.split()[1]
+						if "MPS-2" in line1:
+							line1 = line1.replace("MPS-2", "MPS-6")
 
 						if int(local_port) == port and line1 == variable_data['gen_name'] and line2 == variable_data['spec_name']:
 							index = i

@@ -86,7 +86,6 @@ class Updater(object):
 				continue
 
 			variable_code = sheet1.cell_value(i, 2)
-
 			#find the corresponding variable ID
 			variable_id = self.get_variable_id(variable_code)
 			if variable_id is None:
@@ -159,7 +158,6 @@ class Updater(object):
 				else:
 					print "Error: No timestamp given for latest update. Rerun with timestamp"
 					sys.exit()
-
 		#if there's no data, return
 		if len(new_data["values"]) <= 0:
 			if self.verbose:
@@ -169,6 +167,7 @@ class Updater(object):
 		payload = json.dumps(new_data)
 		print "payload " + str(payload)
 		
+		return
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
@@ -186,7 +185,6 @@ class Updater(object):
 				print e.headers
 				print e.fp.read()
 
-
 	#this script reads the lookup-table and for each row, gets the logger-port-response-site-variable-method information
 	#this should include the SiteCode, SiteID, VariableID, MethodID
 	###################################################################
@@ -196,7 +194,7 @@ class Updater(object):
 		#get the sensor metadata:
 		#sensor, response, variable code, and method id
 		sensor_metadata = self.get_sensor_metadata(sensor_name)
-
+		
 		#open the lookup table
 		book = xlrd.open_workbook(self.xlsfile)
 		sheets = book.sheets()
@@ -208,7 +206,7 @@ class Updater(object):
 			site_code = sheet0.cell_value(i, 1)
 			port = int(sheet0.cell_value(i, 4))
 			sensor = sheet0.cell_value(i, 5)
-			
+
 			#find the corresponding site ID
 			site_id = self.get_site_id(site_code)
 			if site_id is None:
@@ -244,10 +242,22 @@ class Updater(object):
 
 
 def get_timestamp(updater, namespace):
-	#this method loops through a set of 10 sites and variables, gets the latest dates from each from the database
+	#this method either sets the timestamp based on one passed in by the user or 
+	#loops through a set of 10 sites and variables, gets the latest dates from each from the database
 	#and compares them to find the most recent to avoid uploading old values again. An argument can be passed
 	#in to specify not to use dxd files, but to upload from xls files instead. 
+	
+	#uses optional arg as another date if present
+	if namespace.latest_upload_time != None:
+		old_time_str = namespace.latest_upload_time
+		try:
+			temp_timestamp = parse(old_time_str)
+			updater.old_timestamp = temp_timestamp
+			return
+		except Exception:
+			print "Timestamp given is invalid"
 
+	 
 	from suds.client import Client
 	client = Client("http://worldwater.byu.edu/app/index.php/rushvalley/services/cuahsi_1_1.asmx?WSDL")
 	#maps site IDs to variable codes
@@ -270,7 +280,8 @@ def get_timestamp(updater, namespace):
 		obj = client.service.GetValuesObject(site, variable )
 		try:
 			inner_time = obj.timeSeries[0].values[0].value[-1]._dateTime
-			print inner_time
+			if updater.verbose:
+				print inner_time
 			if updater.old_timestamp == "none":
 				updater.old_timestamp = inner_time
 			elif inner_time > updater.old_timestamp:
@@ -278,16 +289,7 @@ def get_timestamp(updater, namespace):
 		except Exception:
 			print "Failed to get timestamp from database for site " + site + " and variable " + variable
 
-	#uses optional arg as another date if present
-	if namespace.latest_upload_time != None:
-		old_time_str = namespace.latest_upload_time
-		try:
-			temp_timestamp = parse(old_time_str)
-			if temp_timestamp > updater.old_timestamp:
-				updater.ld_timestamp = temp_timestamp
-		except Exception:
-			print "Timestamp given is invalid"
-
+	
 
 if __name__ == '__main__':
 
@@ -320,3 +322,7 @@ if __name__ == '__main__':
 	u.upload_data('PYR')
 	u.upload_data('MPS-6')
 	u.upload_data('GS3')
+
+	if u.manual_upload_file != None:
+		u.upload_data('5TE')
+		u.upload_data('5TM')
