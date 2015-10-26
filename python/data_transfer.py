@@ -167,7 +167,6 @@ class Updater(object):
 		payload = json.dumps(new_data)
 		print "payload " + str(payload)
 		
-		return
 		url = self.HYDROSERVER_URL + 'values'
 		req = urllib2.Request(url)
 		req.add_header('Content-Type', 'application/json')
