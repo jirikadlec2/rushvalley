@@ -127,7 +127,7 @@ def get_variable_data(var_id, lookup_file):
 		'var_id': var_id
 	}
 	header_row = var_sheet.row(0)
-	while row_num < 18: #there are only 18 rows in the file
+	while row_num < 23: #there are only 23 rows in the file
 		row = var_sheet.row(row_num)
 		row_num += 1
 		if row[3].value == var_id:
@@ -151,7 +151,7 @@ def validate_site(site_code, logger_name, port, lookup_file):
 	main_sheet = book.sheet_by_index(0)
 	row_num = 1 #data starts on second row
 	
-	while row_num < 105: #there are 105 rows
+	while row_num < 116: #there are 116 valid rows
 		row = main_sheet.row(row_num)
 		row_num += 1
 		if row[0].value == logger_name and row[1].value == site_code and row[4].value == port:
@@ -174,11 +174,11 @@ def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, look
 		return
 	variable_data = get_variable_data(var_id, lookup_file)
 	if variable_data['gen_name'] == "":
-		print "No data for variable " + str(var_id) + " in logger: " + str(logger)
+		print "No data for variable " + str(var_id) + " in logger: " + str(logger_name)
 		return
 	book = xlrd.open_workbook(xls_file)
 	sheet0 = book.sheet_by_index(0)
-	result = [] 
+	result = []
 
 	row_num = 0
 	row = sheet0.row(row_num)
