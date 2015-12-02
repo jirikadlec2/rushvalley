@@ -82,6 +82,7 @@ class Updater(object):
 		lookup = []
 		for i in range(1, nr):
 			sensor_code = sheet1.cell_value(i, 0)
+
 			if sensor_code != sensor:
 				continue
 
@@ -127,7 +128,7 @@ class Updater(object):
 	# ID's that already exist in the database.								#
 	#########################################################################
 	def sensor_upload(self, site_id, site_code, variable_id, method_id, source_id, upload_file, port, sensor, resp, logger):
-		new_data = {
+                new_data = {
 				"user": self.HYDROSERVER_USER,
 				"password": self.HYDROSERVER_PASSWORD,
 				"SiteID": site_id,
@@ -138,7 +139,9 @@ class Updater(object):
 		}
 		#reading the new data from the dxd file
 		if (self.manual_upload_file != None):
-			new_data['values'] =  decagon.read_xls(variable_id, site_code, u.manual_upload_file.name, port, self.old_timestamp, logger, self.xlsfile)
+			print (str(variable_id), str(site_code), str(u.manual_upload_file.name), str(port), str(self.old_timestamp), str(logger), str(self.xlsfile))
+
+                        new_data['values'] =  decagon.read_xls(variable_id, site_code, u.manual_upload_file.name, port, self.old_timestamp, logger, self.xlsfile)
 		else:
 			raw_data = decagon.read_dxd(upload_file, port)
 		
@@ -192,6 +195,7 @@ class Updater(object):
 	def upload_data(self, sensor_name):
 		#get the sensor metadata:
 		#sensor, response, variable code, and method id
+                print sensor_name
 		sensor_metadata = self.get_sensor_metadata(sensor_name)
 		
 		#open the lookup table
@@ -227,17 +231,17 @@ class Updater(object):
 				print "sensor metadata" + str( sensor_metadata)
 			#start the uploading
 			if sensor == sensor_name:
-				for md in sensor_metadata:
-					self.sensor_upload(site_id=site_id,
-					  site_code=site_code,
-					  variable_id=md["variable_id"],
-					  method_id=md["method"],
-					  source_id=1,
-					  resp=md["response"],
-					  upload_file=upload_file,
-					  port=port,
-					  sensor=sensor,
-					  logger=logger)
+                            for md in sensor_metadata:
+				self.sensor_upload(site_id=site_id,
+				  site_code=site_code,
+				  variable_id=md["variable_id"],
+				  method_id=md["method"],
+				  source_id=1,
+				  resp=md["response"],
+				  upload_file=upload_file,
+				  port=port,
+				  sensor=sensor,
+				  logger=logger)
 
 
 def get_timestamp(updater, namespace):
