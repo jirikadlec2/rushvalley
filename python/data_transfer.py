@@ -259,8 +259,9 @@ def get_timestamp(updater, namespace):
 			return
 		except Exception:
 			print "Timestamp given is invalid"
+	if namespace.no_date != None:
+		return
 
-	 
 	from suds.client import Client
 	client = Client("http://worldwater.byu.edu/app/index.php/rushvalley/services/cuahsi_1_1.asmx?WSDL")
 	#maps site IDs to variable codes
@@ -305,6 +306,7 @@ if __name__ == '__main__':
 	type=argparse.FileType('r'))
 	parser.add_argument("-v", "--verbose", action='store_true', help="Print out messages while running")
 	parser.add_argument("-nu", "--no_upload", action='store_true', help="Don't upload data, used for testing")
+	parser.add_argument("-nd", "--no_date", action='store_true', help="Don't use a date flag as an upload constraint")
 	
 	namespace = parser.parse_args()
 
