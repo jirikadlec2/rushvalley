@@ -194,7 +194,7 @@ def read_xls(var_id, site_code, xls_file, port, old_timestamp, logger_name, look
 			if raw_date != None and raw_date != "":
 				year, month, day, hour, minute, second = xlrd.xldate_as_tuple(raw_date, book.datemode)
 				date_obj = datetime.datetime(year, month, day, hour, second)
-
+                                print ("old_timestamp: " + old_timestamp)
 				#don't include old values
 				if old_timestamp == "none" or date_obj > old_timestamp:
 					date = str(date_obj)

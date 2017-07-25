@@ -142,6 +142,8 @@ class Updater(object):
 			print (str(variable_id), str(site_code), str(u.manual_upload_file.name), str(port), str(self.old_timestamp), str(logger), str(self.xlsfile))
 
                         new_data['values'] =  decagon.read_xls(variable_id, site_code, u.manual_upload_file.name, port, self.old_timestamp, logger, self.xlsfile)
+                        if self.verbose:
+                            print (new_data)
 		else:
 			raw_data = decagon.read_dxd(upload_file, port)
 		
